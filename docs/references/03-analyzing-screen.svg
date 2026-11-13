@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 800" width="400" height="800" style="background:#F8FAFC;font-family:system-ui,-apple-system,sans-serif;">
+  <!-- Status Bar -->
+  <rect width="400" height="32" fill="#0F172A"/>
+  <text x="20" y="21" fill="#FFFFFF" font-size="12" font-weight="600">10:44</text>
+  <text x="340" y="21" fill="#FFFFFF" font-size="12">4G 80%</text>
+
+  <!-- Header -->
+  <rect y="32" width="400" height="64" fill="#0D9488"/>
+  <text x="24" y="72" fill="#FFFFFF" font-size="20" font-weight="700">Analyzing Your Report</text>
+
+  <!-- Progress Container -->
+  <g transform="translate(20, 140)">
+    <rect width="360" height="480" rx="16" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+    
+    <!-- Animated Pulsing Spinner Graphic -->
+    <circle cx="180" cy="80" r="40" fill="#CCFBF1"/>
+    <circle cx="180" cy="80" r="30" fill="none" stroke="#0D9488" stroke-width="6" stroke-dasharray="140 40"/>
+    <text x="180" y="88" text-anchor="middle" font-size="24">⏱️</text>
+
+    <text x="180" y="150" text-anchor="middle" fill="#0F172A" font-size="19" font-weight="700">Please wait 15-20 seconds</text>
+    <text x="180" y="174" text-anchor="middle" fill="#0F766E" font-size="14">ಸ್ವಲ್ಪ ಸಮಯ ಕಾಯಿರಿ...</text>
+
+    <!-- Step-by-Step Progress Checklist -->
+    <g transform="translate(24, 210)">
+      <!-- Step 1: Complete -->
+      <circle cx="16" cy="16" r="14" fill="#DCFCE7"/>
+      <text x="16" y="21" fill="#166534" font-size="14" font-weight="bold" text-anchor="middle">✓</text>
+      <text x="42" y="21" fill="#15803D" font-size="14" font-weight="600">Personal details scrubbed locally</text>
+
+      <!-- Step 2: Complete -->
+      <circle cx="16" cy="66" r="14" fill="#DCFCE7"/>
+      <text x="16" y="71" fill="#166534" font-size="14" font-weight="bold" text-anchor="middle">✓</text>
+      <text x="42" y="71" fill="#15803D" font-size="14" font-weight="600">Medicine salts / biomarkers identified</text>
+
+      <!-- Step 3: In Progress -->
+      <circle cx="16" cy="116" r="14" fill="#CCFBF1"/>
+      <circle cx="16" cy="116" r="10" fill="none" stroke="#0D9488" stroke-width="3" stroke-dasharray="40 15"/>
+      <text x="42" y="121" fill="#0F766E" font-size="14" font-weight="700">Creating Kannada &amp; Hindi audio...</text>
+
+      <!-- Step 4: Pending -->
+      <circle cx="16" cy="166" r="14" fill="#F1F5F9"/>
+      <circle cx="16" cy="166" r="6" fill="#94A3B8"/>
+      <text x="42" y="171" fill="#64748B" font-size="14">Preparing 3 questions for your doctor</text>
+    </g>
+
+    <!-- Calming Reassurance Note -->
+    <g transform="translate(24, 410)">
+      <rect width="312" height="48" rx="8" fill="#F8FAFC" stroke="#E2E8F0"/>
+      <text x="156" y="28" fill="#64748B" font-size="12" text-anchor="middle">🔒 Your image is never shared or stored on public servers.</text>
+    </g>
+  </g>
+
+  <!-- Bottom Navigation -->
+  <rect y="740" width="400" height="60" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+</svg>

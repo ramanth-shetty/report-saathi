@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 800" width="400" height="800" style="background:#F8FAFC;font-family:system-ui,-apple-system,sans-serif;">
+  <!-- Status Bar -->
+  <rect width="400" height="32" fill="#0F172A"/>
+  <text x="20" y="21" fill="#FFFFFF" font-size="12" font-weight="600">10:42</text>
+  <text x="340" y="21" fill="#FFFFFF" font-size="12">4G 82%</text>
+
+  <!-- App Header -->
+  <rect y="32" width="400" height="64" fill="#0D9488"/>
+  <text x="24" y="72" fill="#FFFFFF" font-size="20" font-weight="700">ReportSaathi / रिपोर्ट साथी</text>
+
+  <!-- Main Card -->
+  <g transform="translate(20, 116)">
+    <rect width="360" height="520" rx="16" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+    
+    <!-- Shield Icon & Title -->
+    <circle cx="180" cy="50" r="32" fill="#CCFBF1"/>
+    <text x="180" y="58" text-anchor="middle" font-size="28">🛡️</text>
+    
+    <text x="180" y="112" text-anchor="middle" fill="#0F172A" font-size="20" font-weight="700">Privacy & Simple Explanation</text>
+    <text x="180" y="136" text-anchor="middle" fill="#0F766E" font-size="15" font-weight="600">ನಿಮ್ಮ ವರದಿ, ಸರಳ ಕನ್ನಡ ಮತ್ತು ಹಿಂದಿಯಲ್ಲಿ</text>
+
+    <!-- Information Points -->
+    <g transform="translate(24, 160)">
+      <rect width="312" height="60" rx="10" fill="#F0FDF4" stroke="#BBF7D0"/>
+      <text x="16" y="26" fill="#166534" font-size="14" font-weight="700">✓ Explains, Does Not Diagnose</text>
+      <text x="16" y="46" fill="#15803D" font-size="13">Helps you prepare for your doctor visit.</text>
+    </g>
+
+    <g transform="translate(24, 230)">
+      <rect width="312" height="60" rx="10" fill="#F0FDF4" stroke="#BBF7D0"/>
+      <text x="16" y="26" fill="#166534" font-size="14" font-weight="700">✓ 100% Identity Details Scrubbed</text>
+      <text x="16" y="46" fill="#15803D" font-size="13">Names, phone numbers and IDs removed locally.</text>
+    </g>
+
+    <g transform="translate(24, 300)">
+      <rect width="312" height="60" rx="10" fill="#F0FDF4" stroke="#BBF7D0"/>
+      <text x="16" y="26" fill="#166534" font-size="14" font-weight="700">✓ DPDP Act 2023 Compliant</text>
+      <text x="16" y="46" fill="#15803D" font-size="13">Delete your data anytime with one tap.</text>
+    </g>
+
+    <!-- Language Selector Pills -->
+    <text x="24" y="390" fill="#64748B" font-size="13" font-weight="600">CHOOSE PREFERRED LANGUAGE / ಭಾಷೆ:</text>
+    <rect x="24" y="404" width="95" height="36" rx="18" fill="#0D9488"/>
+    <text x="71" y="427" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">English</text>
+
+    <rect x="127" y="404" width="95" height="36" rx="18" fill="#F1F5F9" stroke="#CBD5E1"/>
+    <text x="174" y="427" fill="#334155" font-size="13" font-weight="600" text-anchor="middle">हिंदी</text>
+
+    <rect x="230" y="404" width="95" height="36" rx="18" fill="#F1F5F9" stroke="#CBD5E1"/>
+    <text x="277" y="427" fill="#334155" font-size="13" font-weight="600" text-anchor="middle">ಕನ್ನಡ</text>
+
+    <!-- Agree Button -->
+    <rect x="24" y="456" width="312" height="52" rx="12" fill="#0F766E"/>
+    <text x="180" y="488" fill="#FFFFFF" font-size="16" font-weight="700" text-anchor="middle">✅ Agree &amp; Continue (ಒಪ್ಪಿಗೆ)</text>
+  </g>
+
+  <!-- Navigation Bar -->
+  <rect y="740" width="400" height="60" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+  <circle cx="200" cy="770" r="14" fill="#0D9488"/>
+</svg>

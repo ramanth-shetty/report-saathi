@@ -1,0 +1,18 @@
+=== BLURRY / DEGRADED OCR ARTIFACT SIMULATION ===
+Tesseract OCR Engine output (Confidence: 38.4% - LOW QUALITY TRIGGER)
+--------------------------------------------------------------------------------
+P@t1ent N@m3: [UNREADABLE NOISE]
+D@te: ..-Nov-2026      L@b: Dr L.. P@th...
+================================================================================
+T3st N@m3            0bserved V@lue     Un1t       R3f R@nge
+--------------------------------------------------------------------------------
+H3m0gl0b1n           ??.?               g/dL       13 - 17
+W8C C0unt            6,,,               /cumm      4000 - 11000
+P1@te1et             [ILLEGIBLE SMEAR]
+F@st1ng G1uc0se      ?80                mg/dL      70 - 100
+Cr3@t1n1n3           1.?                mg/dL      0.7 - 1.3
+================================================================================
+[WARNING: Low contrast, 45 degree tilt angle, specular shadow detected]
+Average Character Confidence: 38.4 / 100
+Status: LOW_QUALITY_RETAKE_REQUIRED
+================================================================================

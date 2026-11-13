@@ -1,0 +1,32 @@
+================================================================================
+OUTPATIENT PHARMACY DISCHARGE & BLISTER PACK RECORD
+================================================================================
+Patient: Sri Venkatachalaiah                Age: 64 Yrs       Sex: Male
+Hospital: Jayadeva Institute of Cardiology  Reg No: JIC-CARD-88192
+Consultant: Dr. Manjunath C. N., MD, DM     Date: 11-Nov-2026
+Address: #88, 3rd Block, Jayanagar, Bengaluru - 560011
+================================================================================
+PRESCRIBED MEDICINES / BLISTER PACK TRANSCRIPTION
+--------------------------------------------------------------------------------
+1. Trade Brand: Telma-AM Tablet
+   Active Ingredients: Telmisartan IP 40 mg + Amlodipine IP 5 mg
+   Dosage: 1 Tablet Once Daily in the Morning (Breakfast)
+   Category: Antihypertensive / Fixed-Dose Combination
+
+2. Trade Brand: Glycomet-GP 1 Tablet
+   Active Ingredients: Glimepiride IP 1 mg + Metformin Hydrochloride IP 500 mg (SR)
+   Dosage: 1 Tablet Twice Daily with Meals (Breakfast & Dinner)
+   Category: Oral Antidiabetic Combination
+
+3. Trade Brand: Atorva 20 Tablet
+   Active Ingredients: Atorvastatin Calcium IP 20 mg
+   Dosage: 1 Tablet at Bedtime
+   Category: HMG-CoA Reductase Inhibitor / Statin
+
+4. Trade Brand: Pan-D Capsule
+   Active Ingredients: Pantoprazole Sodium IP 40 mg + Domperidone IP 30 mg (SR)
+   Dosage: 1 Capsule Empty Stomach 30 mins before Breakfast
+================================================================================
+Dispensed by: Jayadeva Pharmacy Counter 4
+Instructions: Do not discontinue blood pressure or diabetes medication abruptly.
+================================================================================

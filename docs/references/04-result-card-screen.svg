@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 860" width="400" height="860" style="background:#F8FAFC;font-family:system-ui,-apple-system,sans-serif;">
+  <!-- Status Bar -->
+  <rect width="400" height="32" fill="#0F172A"/>
+  <text x="20" y="21" fill="#FFFFFF" font-size="12" font-weight="600">10:45</text>
+  <text x="340" y="21" fill="#FFFFFF" font-size="12">4G 79%</text>
+
+  <!-- Header -->
+  <rect y="32" width="400" height="60" fill="#0D9488"/>
+  <text x="20" y="68" fill="#FFFFFF" font-size="18" font-weight="700">Telma-AM (ಟೆಲ್ಮಾ-ಎಎಂ)</text>
+  <rect x="300" y="48" width="80" height="28" rx="14" fill="#0F766E"/>
+  <text x="340" y="66" fill="#FFFFFF" font-size="12" font-weight="600" text-anchor="middle">Routine</text>
+
+  <!-- Audio Player Bar (High Accessibility) -->
+  <g transform="translate(16, 104)">
+    <rect width="368" height="64" rx="16" fill="#065F46"/>
+    <circle cx="38" cy="32" r="22" fill="#34D399"/>
+    <polygon points="33,22 47,32 33,42" fill="#065F46"/>
+    <text x="70" y="28" fill="#FFFFFF" font-size="15" font-weight="700">Listen in Kannada (ಆಲಿಸಿ)</text>
+    <text x="70" y="48" fill="#A7F3D0" font-size="12">0:38 • ಧ್ವನಿ ವಿವರಣೆ</text>
+    <rect x="270" y="18" width="82" height="28" rx="14" fill="#047857"/>
+    <text x="311" y="36" fill="#FFFFFF" font-size="12" font-weight="600" text-anchor="middle">🔊 1.0x</text>
+  </g>
+
+  <!-- Explainer Card (Plain Language) -->
+  <g transform="translate(16, 180)">
+    <rect width="368" height="260" rx="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+    <rect width="368" height="36" rx="14 14 0 0" fill="#F0FDFA"/>
+    <text x="16" y="24" fill="#0F766E" font-size="14" font-weight="700">MEDICINE EXPLAINER (ಮಾತ್ರೆ ವಿವರಣೆ)</text>
+
+    <!-- Bullets -->
+    <text x="16" y="62" fill="#0F172A" font-size="13" font-weight="700">What it does:</text>
+    <text x="16" y="80" fill="#334155" font-size="13">Relaxes blood pipes so your heart pumps easily.</text>
+
+    <text x="16" y="112" fill="#0F172A" font-size="13" font-weight="700">How to take:</text>
+    <text x="16" y="130" fill="#334155" font-size="13">1 tablet every morning with or without food.</text>
+
+    <text x="16" y="162" fill="#0F172A" font-size="13" font-weight="700">Normal sensations:</text>
+    <text x="16" y="180" fill="#334155" font-size="13">Mild ankle swelling or light dizziness when rising.</text>
+
+    <!-- Red Flag Box -->
+    <rect x="12" y="202" width="344" height="46" rx="8" fill="#FEF2F2" stroke="#FECACA"/>
+    <text x="22" y="222" fill="#991B1B" font-size="12" font-weight="700">⚠️ Red Flag:</text>
+    <text x="22" y="238" fill="#B91C1C" font-size="12">Severe swelling of face/lips or fainting -> Call doctor.</text>
+  </g>
+
+  <!-- 3 Questions for Doctor Card -->
+  <g transform="translate(16, 452)">
+    <rect width="368" height="196" rx="14" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+    <text x="16" y="28" fill="#1E40AF" font-size="14" font-weight="700">💬 3 QUESTIONS TO ASK YOUR DOCTOR</text>
+
+    <g transform="translate(14, 42)">
+      <rect width="340" height="42" rx="8" fill="#FFFFFF"/>
+      <text x="10" y="26" fill="#1E3A8A" font-size="12">1. "Is my mild evening ankle swelling normal?"</text>
+    </g>
+
+    <g transform="translate(14, 90)">
+      <rect width="340" height="42" rx="8" fill="#FFFFFF"/>
+      <text x="10" y="26" fill="#1E3A8A" font-size="12">2. "When should we check my kidney/potassium?"</text>
+    </g>
+
+    <g transform="translate(14, 138)">
+      <rect width="340" height="42" rx="8" fill="#FFFFFF"/>
+      <text x="10" y="26" fill="#1E3A8A" font-size="12">3. "If I miss a morning pill, what should I do?"</text>
+    </g>
+  </g>
+
+  <!-- Language Switcher & Forward Bar -->
+  <g transform="translate(16, 660)">
+    <rect width="176" height="44" rx="10" fill="#25D366"/>
+    <text x="88" y="27" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">📤 Share to WhatsApp</text>
+
+    <rect x="192" y="0" width="176" height="44" rx="10" fill="#0D9488"/>
+    <text x="280" y="27" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">🌐 ಕನ್ನಡ / हिंदी</text>
+  </g>
+
+  <!-- Fixed Disclaimer Banner -->
+  <g transform="translate(16, 716)">
+    <rect width="368" height="52" rx="8" fill="#F1F5F9" stroke="#E2E8F0"/>
+    <text x="184" y="24" fill="#64748B" font-size="11" text-anchor="middle">This explains your report in simple words. It is not a diagnosis.</text>
+    <text x="184" y="40" fill="#64748B" font-size="11" text-anchor="middle">Personal details removed (best effort). Show this to your doctor.</text>
+  </g>
+
+  <!-- Bottom Navigation -->
+  <rect y="790" width="400" height="70" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="200" y="828" fill="#0D9488" font-size="13" font-weight="700" text-anchor="middle">Scan Another (ಇನ್ನೊಂದು ವರದಿ)</text>
+</svg>

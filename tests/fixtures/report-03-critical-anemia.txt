@@ -1,0 +1,26 @@
+================================================================================
+DR. LAL PATHLABS - NATIONAL REFERENCE LAB
+================================================================================
+Patient Name: Smt. Parvati Devi             Age: 44 Yrs       Gender: Female
+Ref By: Dr. Rajeshwari Hegde, MD (OBG)      Sample ID: DL-887192
+Phone: 080-23456789                         Reg No: LAL-BLR-00291
+Address: 12th Main Road, Malleshwaram, Bangalore - 560003
+================================================================================
+HEMATOLOGY REPORT - ANEMIA WORKUP
+--------------------------------------------------------------------------------
+Test Name                      Observed Value    Unit       Reference Range
+--------------------------------------------------------------------------------
+Hemoglobin                     6.2               g/dL       12.0 - 15.0
+RBC Count                      2.8               mil/cumm   3.8 - 4.8
+Packed Cell Volume (PCV)       21.0              %          36.0 - 46.0
+MCV                            64.5              fL         80.0 - 100.0
+MCH                            20.1              pg         27.0 - 32.0
+MCHC                           28.2              g/dL       32.0 - 36.0
+RDW-CV                         19.8              %          11.5 - 14.5
+Serum Iron                     22                ug/dL      50 - 170
+Total Iron Binding Cap (TIBC)  460               ug/dL      250 - 450
+Serum Ferritin                 4.8               ng/mL      15 - 150
+================================================================================
+Impression: Microcytic Hypochromic Anemia picture with severe iron depletion.
+Pathologist: Dr. K. M. Singhal, MD
+================================================================================

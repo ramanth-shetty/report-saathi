@@ -1,0 +1,25 @@
+================================================================================
+APOLLO DIAGNOSTICS & CLINICS
+================================================================================
+Patient: Mrs. Ananya Deshmukh               Age: 56 Yrs       Sex: Female
+Consultant: Dr. V. Narayanan, MBBS, DNB     Visit ID: APO-902183
+Contact No: 9876543210                      Accession: 4492019
+Email: ananya.d@example.com                 Date: 10-Nov-2026
+Clinic: Jayanagar 4th Block, Bengaluru - 560011
+================================================================================
+DIABETIC PROFILE & METABOLIC PANEL
+--------------------------------------------------------------------------------
+Test Name                      Observed Value    Unit       Reference Range
+--------------------------------------------------------------------------------
+Fasting Blood Sugar (FBS)      285               mg/dL      70 - 100
+Postprandial Blood Sugar (PPBS)410               mg/dL      < 140
+HbA1c (Glycated Hemoglobin)    11.4              %          < 5.7 (Normal)
+                                                            5.7 - 6.4 (Prediabetes)
+                                                            >= 6.5 (Diabetes)
+Estimated Average Glucose (eAG)280               mg/dL      90 - 120
+Urine Sugar                    +++ (Present)                Negative
+Urine Ketones                  Trace                        Negative
+================================================================================
+Doctor Signature: Dr. V. Narayanan
+Report generated on 10-Nov-2026 14:22:10
+================================================================================

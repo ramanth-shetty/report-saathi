@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ReportSaathi | Family Health Translator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Kannada:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app" class="container">
+      <header class="header">
+        <div class="logo-group">
+          <span class="logo-icon" aria-hidden="true">🩺</span>
+          <div>
+            <h1 class="logo-title">ReportSaathi</h1>
+            <p class="tagline">Family Health Translator • Walking Skeleton</p>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <section class="card status-card">
+          <div class="card-header">
+            <h2>System Health & Contract Verification</h2>
+            <span id="service-badge" class="badge badge-neutral">Connecting...</span>
+          </div>
+
+          <div class="field-row">
+            <span class="label">Backend Endpoint:</span>
+            <code id="backend-endpoint" class="code-val">Checking...</code>
+          </div>
+
+          <div class="field-row">
+            <span class="label">Service Version:</span>
+            <span id="service-version" class="value">—</span>
+          </div>
+
+          <div class="field-row">
+            <span class="label">Database Connectivity:</span>
+            <span id="db-status-badge" class="badge badge-neutral">Checking...</span>
+          </div>
+
+          <div class="database-value-box">
+            <div class="db-box-title">Value Read From Database:</div>
+            <div id="db-value-display" class="db-value">Waiting for backend probe...</div>
+            <div id="db-message-display" class="db-message"></div>
+          </div>
+
+          <div class="action-row">
+            <button id="refresh-btn" class="btn btn-primary" type="button">
+              🔄 Check Health Again
+            </button>
+            <span id="last-checked" class="timestamp"></span>
+          </div>
+        </section>
+
+        <section class="card info-card">
+          <h3>Task 1: Walking Skeleton Details</h3>
+          <p class="info-text">
+            This page verifies the end-to-end contract between the <strong>Cloudflare Pages</strong> static frontend,
+            the <strong>FastAPI</strong> backend service, and the <strong>Supabase PostgreSQL</strong> database.
+          </p>
+          <div class="disclaimer-banner">
+            ℹ️ Personal details removed (best effort). Explains, does not diagnose.
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p>ReportSaathi • Milestone 0 Deployed Contract</p>
+      </footer>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+================================================================================
+MANIPAL HOSPITALS - LABORATORY MEDICINE
+================================================================================
+Patient Name: Master Aarav Gowda            Age: 19 Yrs       Gender: Male
+Ref. Doctor: Dr. Girish Kumar, MD (Ped)     IP/OP No: MH-OP-882190
+Sample Coll: 13-Nov-2026 08:30 AM           MRN: 7712903
+Address: #14, HAL 2nd Stage, Bangalore 560008
+================================================================================
+ACUTE FEBRILE ILLNESS / DENGUE PANEL
+--------------------------------------------------------------------------------
+Test Name                      Observed Value    Unit       Reference Range
+--------------------------------------------------------------------------------
+Platelet Count                 14000             /cumm      150000 - 450000
+Hemoglobin                     16.8              g/dL       13.0 - 17.0
+Hematocrit (PCV)               51.2              %          40.0 - 50.0
+WBC Count                      2600              /cumm      4000 - 11000
+Dengue NS1 Antigen             POSITIVE                     Negative
+Dengue IgM Antibodies          POSITIVE                     Negative
+Dengue IgG Antibodies          NEGATIVE                     Negative
+================================================================================
+CRITICAL NOTIFICATION: Platelet count < 20,000 /cumm communicated to physician.
+Pathologist: Dr. N. R. Swamy, MD
+================================================================================

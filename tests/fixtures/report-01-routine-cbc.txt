@@ -1,0 +1,30 @@
+================================================================================
+PATIENT REPORT - METROPOLIS HEALTHCARE
+================================================================================
+Patient Name: Ramesh Kumar                  Age: 32 Yrs       Gender: Male
+Referred By: Dr. A. K. Sharma, MD           Date: 12-Nov-2026
+UHID / MRN: MET-BLR-982341                  Lab No: 88234199
+Contact: +91 98450 12345                    Sample Type: EDTA Whole Blood
+Address: #42, 5th Cross, Indiranagar, Bengaluru, Karnataka - 560038
+================================================================================
+COMPLETE BLOOD COUNT (CBC)
+--------------------------------------------------------------------------------
+Test Name                      Observed Value    Unit       Reference Range
+--------------------------------------------------------------------------------
+Hemoglobin                     14.8              g/dL       13.0 - 17.0
+Total Leukocyte Count (WBC)    6800              /cumm      4000 - 11000
+RBC Count                      5.1               mil/cumm   4.5 - 5.5
+Packed Cell Volume (PCV)       44.2              %          40.0 - 50.0
+Mean Corpuscular Volume (MCV)  86.7              fL         80.0 - 100.0
+MCH                            29.0              pg         27.0 - 32.0
+MCHC                           33.5              g/dL       32.0 - 36.0
+Platelet Count                 240000            /cumm      150000 - 450000
+Neutrophils                    62                %          40 - 75
+Lymphocytes                    30                %          20 - 45
+Monocytes                      5                 %          2 - 10
+Eosinophils                    3                 %          1 - 6
+Basophils                      0                 %          0 - 2
+================================================================================
+Verified by: Dr. Sunita Rao, MD (Pathology)
+NABL ACCREDITED LAB • ISO 15189:2012 Certified
+================================================================================

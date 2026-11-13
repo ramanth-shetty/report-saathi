@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 800" width="400" height="800" style="background:#F8FAFC;font-family:system-ui,-apple-system,sans-serif;">
+  <!-- Status Bar -->
+  <rect width="400" height="32" fill="#0F172A"/>
+  <text x="20" y="21" fill="#FFFFFF" font-size="12" font-weight="600">10:43</text>
+  <text x="340" y="21" fill="#FFFFFF" font-size="12">4G 81%</text>
+
+  <!-- App Header -->
+  <rect y="32" width="400" height="64" fill="#0D9488"/>
+  <text x="24" y="72" fill="#FFFFFF" font-size="20" font-weight="700">Scan Medicine or Lab Report</text>
+
+  <!-- Instructional Guidance -->
+  <g transform="translate(20, 112)">
+    <rect width="360" height="60" rx="12" fill="#FEF3C7" stroke="#FDE68A"/>
+    <text x="18" y="27" fill="#92400E" font-size="13" font-weight="700">💡 Tip for Clear Reading (ಸ್ಪಷ್ಟ ಫೋಟೋ ತೆಗೆಯಿರಿ):</text>
+    <text x="18" y="47" fill="#78350F" font-size="12">Keep the medicine strip or paper flat in good light.</text>
+  </g>
+
+  <!-- Capture Viewport -->
+  <g transform="translate(20, 186)">
+    <rect width="360" height="340" rx="16" fill="#FFFFFF" stroke="#0D9488" stroke-width="2" stroke-dasharray="8 6"/>
+    
+    <!-- Viewport Reticle / Frame -->
+    <path d="M 40 40 L 80 40 M 40 40 L 40 80" stroke="#0D9488" stroke-width="4" fill="none"/>
+    <path d="M 320 40 L 280 40 M 320 40 L 320 80" stroke="#0D9488" stroke-width="4" fill="none"/>
+    <path d="M 40 300 L 80 300 M 40 300 L 40 260" stroke="#0D9488" stroke-width="4" fill="none"/>
+    <path d="M 320 300 L 280 300 M 320 300 L 320 260" stroke="#0D9488" stroke-width="4" fill="none"/>
+
+    <!-- Center Prompt Graphic -->
+    <circle cx="180" cy="140" r="44" fill="#F0FDFA"/>
+    <text x="180" y="152" text-anchor="middle" font-size="40">📷</text>
+    <text x="180" y="210" text-anchor="middle" fill="#0F172A" font-size="17" font-weight="700">Place Strip or Report Here</text>
+    <text x="180" y="234" text-anchor="middle" fill="#64748B" font-size="13">ಮಾತ್ರೆ ಪಟ್ಟಿ ಅಥವಾ ವರದಿಯನ್ನು ಇಲ್ಲಿ ಇರಿಸಿ</text>
+  </g>
+
+  <!-- Actions -->
+  <g transform="translate(20, 546)">
+    <!-- Primary Shutter Button -->
+    <rect width="360" height="56" rx="14" fill="#0F766E"/>
+    <text x="180" y="35" fill="#FFFFFF" font-size="17" font-weight="700" text-anchor="middle">📸 Take Photo (ಕ್ಯಾಮೆರಾ)</text>
+    
+    <!-- Secondary File Upload Button -->
+    <rect y="70" width="360" height="52" rx="14" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="180" y="103" fill="#334155" font-size="15" font-weight="600" text-anchor="middle">📄 Upload PDF or Gallery Image</text>
+  </g>
+
+  <!-- Bottom Navigation -->
+  <rect y="740" width="400" height="60" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+</svg>

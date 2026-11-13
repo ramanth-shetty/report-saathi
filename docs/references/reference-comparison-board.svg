@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500" style="background:#F8FAFC;font-family:system-ui,-apple-system,sans-serif;">
+  <!-- Header -->
+  <rect width="800" height="60" fill="#0F172A"/>
+  <text x="30" y="38" fill="#FFFFFF" font-size="20" font-weight="700">Design Direction: Reference Analysis &amp; Trade-offs</text>
+
+  <!-- 4 Reference Quadrants -->
+  <!-- Quad 1: NHS UK -->
+  <g transform="translate(30, 80)">
+    <rect width="360" height="190" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+    <rect width="360" height="34" rx="10 10 0 0" fill="#005EB8"/>
+    <text x="14" y="22" fill="#FFFFFF" font-size="14" font-weight="700">1. NHS Digital Service Manual (UK)</text>
+    
+    <text x="14" y="58" fill="#166534" font-size="12" font-weight="700">✅ Borrow:</text>
+    <text x="14" y="76" fill="#334155" font-size="11">• Question-driven headings ("What it is", "How to take")</text>
+    <text x="14" y="94" fill="#334155" font-size="11">• High-contrast black on warm white (WCAG AAA)</text>
+
+    <text x="14" y="124" fill="#991B1B" font-size="12" font-weight="700">❌ Avoid:</text>
+    <text x="14" y="142" fill="#334155" font-size="11">• Wall-of-text formatting without audio equivalents</text>
+    <text x="14" y="160" fill="#334155" font-size="11">• Desktop-first layout patterns ill-suited for 360px phones</text>
+  </g>
+
+  <!-- Quad 2: Google Material NBU (Android Go) -->
+  <g transform="translate(410, 80)">
+    <rect width="360" height="190" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+    <rect width="360" height="34" rx="10 10 0 0" fill="#0F766E"/>
+    <text x="14" y="22" fill="#FFFFFF" font-size="14" font-weight="700">2. Google Material NBU (Android Go)</text>
+    
+    <text x="14" y="58" fill="#166534" font-size="12" font-weight="700">✅ Borrow:</text>
+    <text x="14" y="76" fill="#334155" font-size="11">• Floating action cards &amp; bottom-anchored thumb zones</text>
+    <text x="14" y="94" fill="#334155" font-size="11">• Minimum 48-56dp touch targets for presbyopic users</text>
+
+    <text x="14" y="124" fill="#991B1B" font-size="12" font-weight="700">❌ Avoid:</text>
+    <text x="14" y="142" fill="#334155" font-size="11">• Heavy blur backdrops/animations that lag on 2GB RAM</text>
+    <text x="14" y="160" fill="#334155" font-size="11">• Nested hamburger drawers and multi-step menus</text>
+  </g>
+
+  <!-- Quad 3: Indian E-Pharmacies (1mg / Apollo) -->
+  <g transform="translate(30, 290)">
+    <rect width="360" height="190" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+    <rect width="360" height="34" rx="10 10 0 0" fill="#D97706"/>
+    <text x="14" y="22" fill="#FFFFFF" font-size="14" font-weight="700">3. Indian E-Pharmacies (Tata 1mg / Apollo)</text>
+    
+    <text x="14" y="58" fill="#166534" font-size="12" font-weight="700">✅ Borrow:</text>
+    <text x="14" y="76" fill="#334155" font-size="11">• Bilingual trade brand vs chemical salt name tagging</text>
+    <text x="14" y="94" fill="#334155" font-size="11">• Familiar blister-pack layout recognition</text>
+
+    <text x="14" y="124" fill="#991B1B" font-size="12" font-weight="700">❌ Avoid:</text>
+    <text x="14" y="142" fill="#334155" font-size="11">• Commercial up-selling banners and coupon spam</text>
+    <text x="14" y="160" fill="#334155" font-size="11">• Intrusive cross-promotions for unprescribed supplements</text>
+  </g>
+
+  <!-- Quad 4: WhatsApp Audio UI -->
+  <g transform="translate(410, 290)">
+    <rect width="360" height="190" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+    <rect width="360" height="34" rx="10 10 0 0" fill="#15803D"/>
+    <text x="14" y="22" fill="#FFFFFF" font-size="14" font-weight="700">4. WhatsApp Native Audio Messaging</text>
+    
+    <text x="14" y="58" fill="#166534" font-size="12" font-weight="700">✅ Borrow:</text>
+    <text x="14" y="76" fill="#334155" font-size="11">• Large green circular play button with elapsed time</text>
+    <text x="14" y="94" fill="#334155" font-size="11">• One-tap forward to trusted family member</text>
+
+    <text x="14" y="124" fill="#991B1B" font-size="12" font-weight="700">❌ Avoid:</text>
+    <text x="14" y="142" fill="#334155" font-size="11">• Unformatted raw text forwards that resemble spam</text>
+    <text x="14" y="160" fill="#334155" font-size="11">• Absence of verified clinical source attribution</text>
+  </g>
+</svg>

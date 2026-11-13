@@ -1,0 +1,6 @@
+name = "reportsaathi-frontend"
+compatibility_date = "2024-03-01"
+pages_build_output_dir = "dist"
+
+[vars]
+VITE_API_URL = "https://reportsaathi-backend.onrender.com"

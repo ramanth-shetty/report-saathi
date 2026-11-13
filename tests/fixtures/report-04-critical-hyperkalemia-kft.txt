@@ -1,0 +1,25 @@
+================================================================================
+AGILUS DIAGNOSTICS (FORMERLY SRL DIAGNOSTICS)
+================================================================================
+Patient: Mr. Chandrashekar Murthy           Age: 68 Yrs       Sex: Male
+Referred By: Dr. P. K. Mohan, DM (Nephro)   Barcode: AG-99018231
+UHID: AGL-1029381                           Date: 09-Nov-2026
+Contact: +91 97412 34567                    Center: Basavanagudi, Bengaluru
+================================================================================
+RENAL FUNCTION TEST (KFT) & ELECTROLYTES
+--------------------------------------------------------------------------------
+Test Name                      Observed Value    Unit       Reference Range
+--------------------------------------------------------------------------------
+Blood Urea                     112               mg/dL      15 - 45
+Serum Creatinine               5.4               mg/dL      0.7 - 1.3
+eGFR (CKD-EPI)                 10                mL/min/1.73m2 > 60
+Serum Potassium                6.4               mmol/L     3.5 - 5.0
+Serum Sodium                   128               mmol/L     135 - 145
+Serum Chloride                 94                mmol/L     98 - 107
+Uric Acid                      9.2               mg/dL      3.5 - 7.2
+Calcium                        7.8               mg/dL      8.5 - 10.5
+Phosphorus                     6.1               mg/dL      2.5 - 4.5
+================================================================================
+CRITICAL ALERT: Potassium 6.4 mmol/L and Creatinine 5.4 mg/dL reported immediately.
+Verified by: Dr. Shalini Verma, MD
+================================================================================

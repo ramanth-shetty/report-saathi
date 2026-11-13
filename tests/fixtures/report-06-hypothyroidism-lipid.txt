@@ -1,0 +1,24 @@
+================================================================================
+ANAND DIAGNOSTIC LABORATORY (NEUBERG ANAND)
+================================================================================
+Patient: Mrs. Geetha Venkataraman           Age: 51 Yrs       Sex: Female
+Consultant: Dr. Deepa Sundaram, MD (Med)    Bill No: ADL-2026-99120
+Phone: +91 99001 23456                      Accession ID: 551920
+Date: 08-Nov-2026                           Center: Shivaji Nagar, Bangalore
+================================================================================
+THYROID & LIPID SCREENING PANEL
+--------------------------------------------------------------------------------
+Test Name                      Observed Value    Unit       Reference Range
+--------------------------------------------------------------------------------
+TSH (Thyroid Stimulating Horm) 14.8              mIU/L      0.45 - 4.50
+Total Triiodothyronine (T3)    78                ng/dL      80 - 200
+Free Thyroxine (FT4)           0.72              ng/dL      0.80 - 1.80
+Total Cholesterol              268               mg/dL      < 200
+Triglycerides                  234               mg/dL      < 150
+HDL Cholesterol (Good)         38                mg/dL      > 50
+LDL Cholesterol (Bad)          183               mg/dL      < 100
+VLDL Cholesterol               47                mg/dL      < 30
+Total / HDL Cholesterol Ratio  7.0                          < 4.5
+================================================================================
+Verified by: Dr. Sujata Trivedi, MD
+================================================================================
