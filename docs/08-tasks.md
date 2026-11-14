@@ -105,9 +105,9 @@ flowchart TD
   * Implement `scrub_pii()` redacting names, phones, UHIDs, addresses, and doctor credentials to `[REDACTED]`.
   * Extract `age` and `biological_sex` into isolated variables.
 * **Definition of Done (DoD):**
-  - [ ] `pytest tests/test_scrub.py` passes against `tests/fixtures/report-08-heavy-pii-header.txt` (0 PII tokens survive).
-  - [ ] `report-09-blurry-low-confidence.txt` returns `low_quality=True`.
-  - [ ] Original image buffers are cleared from memory post-OCR.
+  - [x] `pytest tests/test_scrub.py` passes against `tests/fixtures/report-08-heavy-pii-header.txt` (0 PII tokens survive).
+  - [x] `report-09-blurry-low-confidence.txt` returns `low_quality=True`.
+  - [x] Original image buffers are cleared from memory post-OCR.
 
 ---
 

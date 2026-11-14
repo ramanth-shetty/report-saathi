@@ -55,3 +55,20 @@ This document records architectural, technical, and operational decisions taken 
   - **Foreign Key Cascades:** `reports.user_id` and `biomarkers.user_id` reference `users(id) ON DELETE CASCADE`. `biomarkers.report_id` references `reports(id) ON DELETE CASCADE`. Executing `DELETE FROM users WHERE id = ...` guarantees 100% hard cascade deletion of all user records without orphaned data.
   - **Deduplication & Trend Indexes:** `idx_reports_user_hash` on `(user_id, report_hash)` enables $O(1)$ report deduplication lookups. `idx_biomarkers_user_test` on `(user_id, lower(test_name), recorded_at desc)` enables fast case-insensitive biomarker trend queries.
   - **Row Level Security (RLS):** Enabled on `users`, `reports`, and `biomarkers` without public policies. Direct client/browser access is completely blocked (default-deny); only the backend server possessing the Supabase `service_role` key can read or mutate database records.
+
+---
+
+## ADR 005: Local In-Memory Preprocessing, Row-Aware OCR & Deterministic PII Scrubbing
+
+* **Date:** 2026-11-14
+* **Status:** Accepted
+* **Context:**
+  Medical lab reports uploaded via Telegram or Web contain sensitive personal identifiers (patient names, phone numbers, hospital UHIDs, MRNs, residential addresses, and physician details). Under India's Digital Personal Data Protection (DPDP) Act 2023, personal data must be safeguarded. Sensitive personal identifiers must be scrubbed locally on-device / in-memory *before* any external LLM API (Google Gemini) receives the payload. Furthermore, raw images and unscrubbed OCR text must never touch persistent storage (disk or database).
+* **Decision:**
+  - **OpenCV In-Memory Preprocessing:** Implemented `preprocess(image_bytes)` performing 2x cubic upscaling for images under 1500px, grayscale conversion, Gaussian adaptive thresholding, and deskew correction via text pixel moments (`minAreaRect`).
+  - **PyMuPDF In-Memory Rasterization:** Implemented `rasterize_pdf(pdf_bytes, dpi=300)` rendering digital and scanned multi-page PDFs to in-memory PNG byte buffers without writing temporary files to disk.
+  - **Row-Aware Bounding Box OCR:** Implemented `ocr_rows()` utilizing Tesseract with `--psm 6` via `image_to_data(output_type=Output.DICT)`. Groups words based on vertical center coordinates ($y_c$) using dynamic vertical gap thresholds ($0.6 \times \text{median\_word\_height}$) and sorts horizontally by `left` coordinates to preserve column alignment (Test Name, Observed Value, Unit, Reference Range).
+  - **OCR Quality Gate:** Computes average word recognition confidence across the document. If average confidence $< 55.0$, signals `low_quality = True` to prompt the user for a clearer image rather than feeding corrupted tokens to downstream LLM analyzers.
+  - **Deterministic Local PII Scrubber:** Implemented `scrub_pii()` using multi-stage regex filtering for Indian phone numbers (`+91`, 10-digit mobile), emails, street addresses, postal pincodes, medical record identifiers (UHID, MRN, Sample ID, Barcode, Accession), doctor credentials/names, and accreditation footers (NABL, ISO, CAP).
+  - **Clinical Demographics Preservation:** Implemented `extract_age_sex()` to extract and isolate patient age and biological sex into standalone variables for clinical reference while removing personal patient names.
+  - **Immutable Trilingual Disclaimer:** Enforced constant disclaimers in English, Hindi, and Kannada (`DISCLAIMER`) hard-coded into Python constants (`shared/constants.py`) and appended deterministically to summaries, ensuring AI models are never tasked with synthesizing or modifying medical legal disclaimers.

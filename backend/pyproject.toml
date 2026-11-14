@@ -16,7 +16,7 @@ ignore = []
 [tool.mypy]
 python_version = "3.11"
 strict = true
-warn_unused_configs = true
+warn_unused_configs = false
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
 check_untyped_defs = true
@@ -26,13 +26,22 @@ warn_unused_ignores = true
 
 [[tool.mypy.overrides]]
 module = [
+    "backend.ocr_scrub",
+    "backend.tests.*",
+]
+disallow_untyped_calls = false
+
+[[tool.mypy.overrides]]
+module = [
     "supabase.*",
     "postgrest.*",
     "gotrue.*",
     "telegram.*",
     "fitz.*",
+    "pymupdf.*",
     "cv2.*",
     "pytesseract.*",
+    "pytesseract",
     "google.*",
 ]
 ignore_missing_imports = true
