@@ -149,9 +149,9 @@ flowchart TD
   * Implement `compute_deltas(current_rows, history)` for trend notes.
   * Implement `delete_user_data(chat_id)` executing hard cascading delete.
 * **Definition of Done (DoD):**
-  - [ ] `pytest tests/test_database.py` smoke test passes on a test user.
-  - [ ] Uploading identical report twice returns stored row with 0 LLM calls.
-  - [ ] `delete_user_data()` purges all linked records in Supabase.
+  - [x] `pytest tests/test_database.py` smoke test passes on a test user.
+  - [x] Uploading identical report twice returns stored row with 0 LLM calls.
+  - [x] `delete_user_data()` purges all linked records in Supabase.
 
 ---
 

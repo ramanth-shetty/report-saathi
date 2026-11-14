@@ -88,3 +88,18 @@ This document records architectural, technical, and operational decisions taken 
   - **Directional Urgency Invariant:** Enforced monotonic urgency rank escalation (`Routine` $1 \to$ `Consult Soon` $2 \to$ `Prompt Attention` $3$). Urgency can only escalate, never downgrade.
   - **Negative Guardrail Sanitization:** Implemented `sanitize_adversarial_output()` to intercept and neutralize adversarial attempts to issue definitive cancer diagnoses or tamper with drug dosages.
   - **Immutable Legal Disclaimers:** Trilingual disclaimers (`en`, `hi`, `kn`) are injected via Python application constants and appended to all summaries, completely insulated from AI modification.
+
+---
+
+## ADR 007: SHA-256 Report Deduplication Caching, Longitudinal Deltas & DPDP Cascading Erasure
+
+* **Date:** 2026-11-14
+* **Status:** Accepted
+* **Context:**
+  Redundant uploads of identical lab reports cause unnecessary network latency and LLM cost. The system architecture targets $\ge 40\%$ cache hit ratio with zero LLM calls on re-uploads. In addition, tracking chronic illnesses (e.g. diabetes, anemia) requires comparing current lab values against previous records for the same user. Finally, statutory compliance with India's DPDP Act 2023 requires atomic, unconditional erasure upon `/delete`.
+* **Decision:**
+  - **Deterministic SHA-256 Hashing:** Implemented `compute_report_hash(scrubbed_lines)` in `backend/database.py` calculating a cryptographic SHA-256 digest over normalized, scrubbed text rows.
+  - **Cache-First Query Pipeline:** Implemented `find_report_by_hash(user_id, report_hash)` leveraging the compound index `(user_id, report_hash)`. Repeated uploads return stored JSON summaries with exactly 0 Gemini API calls.
+  - **On-Demand Indic Translation Caching:** Implemented `save_translation()` and `get_translation()` saving `summary_hi` and `summary_kn` on demand, ensuring translation requests are synthesized at most once per language.
+  - **Longitudinal Trend Delta Engine:** Implemented `compute_deltas(current_rows, history)` pairing current biomarker values with the latest previous recorded reading, generating clear clinical comparison strings (e.g. `"HbA1c: 8.4% -> 7.8% (improved)"`).
+  - **DPDP Cascade Erasure:** Implemented `delete_user_data(chat_id)` executing a single delete against the `users` table, which automatically purges linked rows in `reports` and `biomarkers` via PostgreSQL `ON DELETE CASCADE`.
