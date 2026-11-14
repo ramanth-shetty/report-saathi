@@ -263,7 +263,7 @@ def parse_rows(lines: list[str]) -> list[dict[str, Any]]:
         if (
             not cleaned_line
             or cleaned_line.startswith(("===", "---", "***"))
-            or "[REDACTED]" in cleaned_line
+            or cleaned_line == "[REDACTED]"
         ):
             continue
 
@@ -274,7 +274,7 @@ def parse_rows(lines: list[str]) -> list[dict[str, Any]]:
             raw_unit = match.group("unit") or ""
             raw_range = match.group("range") or ""
 
-            if not raw_name or len(raw_name) < 2:
+            if not raw_name or len(raw_name) < 2 or "[REDACTED]" in raw_name:
                 continue
 
             # Normalize OCR confusion on numbers
@@ -449,7 +449,8 @@ def scrub_pii(lines: list[str]) -> tuple[list[str], int | None, str | None]:
         ):
             redacted = "[REDACTED]"
         elif _PINCODE_REGEX.search(redacted) and not re.search(
-            r"\b(?:U/L|mg/dL|mmol/L|g/dL)\b", redacted
+            r"(?i)\b(?:U/L|mg/dL|mmol/L|g/dL|/cumm|/uL|platelet|count|cells|fL|pg)\b",
+            redacted,
         ):
             redacted = _PINCODE_REGEX.sub("[REDACTED]", redacted)
 

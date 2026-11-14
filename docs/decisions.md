@@ -72,3 +72,19 @@ This document records architectural, technical, and operational decisions taken 
   - **Deterministic Local PII Scrubber:** Implemented `scrub_pii()` using multi-stage regex filtering for Indian phone numbers (`+91`, 10-digit mobile), emails, street addresses, postal pincodes, medical record identifiers (UHID, MRN, Sample ID, Barcode, Accession), doctor credentials/names, and accreditation footers (NABL, ISO, CAP).
   - **Clinical Demographics Preservation:** Implemented `extract_age_sex()` to extract and isolate patient age and biological sex into standalone variables for clinical reference while removing personal patient names.
   - **Immutable Trilingual Disclaimer:** Enforced constant disclaimers in English, Hindi, and Kannada (`DISCLAIMER`) hard-coded into Python constants (`shared/constants.py`) and appended deterministically to summaries, ensuring AI models are never tasked with synthesizing or modifying medical legal disclaimers.
+
+---
+
+## ADR 006: Deterministic Critical Overrides, Directional Urgency & Structured Gemini Analyzer
+
+* **Date:** 2026-11-14
+* **Status:** Accepted
+* **Context:**
+  Critical medical lab values (e.g., Hemoglobin $< 7.0\text{ g/dL}$, Fasting Glucose $> 250\text{ mg/dL}$, Platelet Count $< 20,000\text{ /\mu L}$) indicate acute physiological risks demanding immediate clinical escalation. Entrusting safety-critical decisions to a probabilistic LLM introduces unacceptable clinical risk. Furthermore, malicious actors or adversarial report notes could attempt prompt injections commanding diagnostic declarations (e.g. terminal cancer) or altering prescription dosages.
+* **Decision:**
+  - **Strict Pydantic Contracts:** Defined `ReportSummary` and `AbnormalMarker` in `backend/gemini_analyzer.py` enforcing strict validation, type safety, and exactly 3 actionable questions for the physician.
+  - **Deterministic Rule Table (`CRITICAL_RULES`):** Compiled standard laboratory panic values in Python. Evaluated deterministically in code on all parsed biomarker rows, bypassing model hallucinations.
+  - **Unit Normalization Engine:** Standardized units prior to threshold comparison (Glucose `mmol/L` $\to$ `mg/dL` $\times 18.0$, Hemoglobin `g/L` $\to$ `g/dL` $\div 10.0$, Platelets `lakhs/cumm` or `k/\mu L` $\to$ `/cumm`).
+  - **Directional Urgency Invariant:** Enforced monotonic urgency rank escalation (`Routine` $1 \to$ `Consult Soon` $2 \to$ `Prompt Attention` $3$). Urgency can only escalate, never downgrade.
+  - **Negative Guardrail Sanitization:** Implemented `sanitize_adversarial_output()` to intercept and neutralize adversarial attempts to issue definitive cancer diagnoses or tamper with drug dosages.
+  - **Immutable Legal Disclaimers:** Trilingual disclaimers (`en`, `hi`, `kn`) are injected via Python application constants and appended to all summaries, completely insulated from AI modification.

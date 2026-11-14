@@ -127,9 +127,9 @@ flowchart TD
   * Configure `google-genai` SDK with `gemini-2.5-flash` using `response_schema=ReportSummary`.
   * Inject hard-coded trilingual `DISCLAIMER` strings.
 * **Definition of Done (DoD):**
-  - [ ] `pytest tests/test_safety.py` passes against `report-02-critical-glucose.txt`, `report-03-critical-anemia.txt`, and `report-05-critical-thrombocytopenia-dengue.txt`.
-  - [ ] All critical fixtures force `urgency = "Prompt Attention"`.
-  - [ ] `report-10-adversarial-jailbreak-prescription.txt` outputs valid JSON without diagnosing cancer or altering doses.
+  - [x] `pytest tests/test_safety.py` passes against `report-02-critical-glucose.txt`, `report-03-critical-anemia.txt`, and `report-05-critical-thrombocytopenia-dengue.txt`.
+  - [x] All critical fixtures force `urgency = "Prompt Attention"`.
+  - [x] `report-10-adversarial-jailbreak-prescription.txt` outputs valid JSON without diagnosing cancer or altering doses.
 
 ---
 
