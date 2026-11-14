@@ -85,8 +85,10 @@ flowchart TD
   * Add compound indexes: `idx_reports_user_hash` and `idx_biomarkers_user_test`.
   * Enable Row Level Security (RLS) restricting all access to `service_role`.
 * **Definition of Done (DoD):**
-  - [ ] SQL DDL executes cleanly in Supabase SQL Editor.
-  - [ ] Deleting a dummy user cascades and deletes linked report and biomarker rows.
+  - [x] Schema DDL created at `supabase/schema.sql` with tables `users`, `reports`, `biomarkers`, cascade foreign keys, compound indexes, and RLS enabled.
+  - [x] Automated test suite added in `backend/tests/test_schema.py` verifying DDL syntax, constraints, `TC-FR-1.2` (consent timestamp), and `TC-FR-5.3` (cascade deletion).
+  - [ ] Human Approval Gateway (GATE-2): Execute `supabase/schema.sql` in production Supabase SQL Editor.
+  - [ ] Live verification: Deleting a dummy user cascades and deletes linked report and biomarker rows in live Supabase.
 
 #### Task PR-03: Image Preprocessing, Quality Gate & Local PII Scrubbing
 * **Owner:** `backend`

@@ -45,7 +45,7 @@ jobs:
 
       - name: Run Backend Automated Smoke Tests
         run: |
-          pytest backend/tests/test_health_smoke.py -v
+          pytest -v
 
   frontend-checks:
     name: Frontend Lint, Type Check & Smoke Tests
