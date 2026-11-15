@@ -103,3 +103,18 @@ This document records architectural, technical, and operational decisions taken 
   - **On-Demand Indic Translation Caching:** Implemented `save_translation()` and `get_translation()` saving `summary_hi` and `summary_kn` on demand, ensuring translation requests are synthesized at most once per language.
   - **Longitudinal Trend Delta Engine:** Implemented `compute_deltas(current_rows, history)` pairing current biomarker values with the latest previous recorded reading, generating clear clinical comparison strings (e.g. `"HbA1c: 8.4% -> 7.8% (improved)"`).
   - **DPDP Cascade Erasure:** Implemented `delete_user_data(chat_id)` executing a single delete against the `users` table, which automatically purges linked rows in `reports` and `biomarkers` via PostgreSQL `ON DELETE CASCADE`.
+
+---
+
+## ADR 008: Core Pipeline Integration & Synchronous `/api/analyze` Endpoint
+
+* **Date:** 2026-11-15
+* **Status:** Accepted
+* **Context:**
+  The end-to-end medical translation workflow requires seamless integration between image preprocessing, row-aware OCR, local PII redaction, deduplication caching, longitudinal delta calculation, structured Gemini analysis, and deterministic safety overrides. Web clients require a synchronous `POST /api/analyze` endpoint with sub-20s execution on fresh uploads and sub-1.5s execution on cache hits.
+* **Decision:**
+  - **Synchronous Ingestion Endpoint:** Implemented `POST /api/analyze` in `backend/main.py` accepting multipart uploads (`.jpg`, `.jpeg`, `.png`, `.pdf`, `.txt`) up to 10MB.
+  - **In-Memory Buffer Purge:** Decoded images and rasterized byte buffers are purged from RAM immediately post-OCR to enforce zero disk persistence (DPDP compliance).
+  - **Quality Gate Rejection:** Rejects blurry scans yielding average OCR confidence $< 55.0$ with `400 Bad Request`.
+  - **Cache-First Orchestration:** Immediately computes SHA-256 hash over scrubbed rows. Cache hits return previously validated summaries in $< 1.5$s with zero Gemini API calls.
+  - **Safety & Disclaimer Guarantee:** All model outputs pass through `apply_safety_overrides()` and `sanitize_adversarial_output()`, appending invariant trilingual disclaimers from `shared/constants.py`.

@@ -336,6 +336,26 @@ def get_translation(
     return cast("dict[str, Any] | None", val)
 
 
+def get_user_biomarkers(
+    user_id: str, client: Any | None = None
+) -> list[dict[str, Any]]:
+    """Fetches historical biomarker readings for a user, ordered newest first."""
+    sb = client or get_supabase_client()
+    if sb is None:
+        return []
+
+    res = (
+        sb.table("biomarkers")
+        .select("*")
+        .eq("user_id", user_id)
+        .order("recorded_at", desc=True)
+        .execute()
+    )
+    if res.data:
+        return cast(list[dict[str, Any]], res.data)
+    return []
+
+
 # ==============================================================================
 # 4. Longitudinal Biomarker Trends & Delta Calculation
 # ==============================================================================

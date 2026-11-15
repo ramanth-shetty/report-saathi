@@ -168,8 +168,8 @@ flowchart TD
   * Expose synchronous `POST /api/analyze` in `backend/main.py`.
   * Ensure comprehensive error handling for blurry images and unparseable rows.
 * **Definition of Done (DoD):**
-  - [ ] `POST /api/analyze` accepts `report-01-routine-cbc.txt` and returns valid `ReportSummary` JSON in $<20$ seconds.
-  - [ ] Re-posting the same file returns in $<1.5$ seconds from cache.
+  - [x] `POST /api/analyze` accepts `report-01-routine-cbc.txt` and returns valid `ReportSummary` JSON in $<20$ seconds.
+  - [x] Re-posting the same file returns in $<1.5$ seconds from cache.
 
 #### Task PR-07: Telegram Bot Asynchronous Event Handler
 * **Owner:** `backend`
