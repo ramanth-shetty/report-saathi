@@ -10,16 +10,26 @@ import os
 from typing import Any
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile, status
+from fastapi import (
+    FastAPI,
+    File,
+    Form,
+    HTTPException,
+    Response,
+    UploadFile,
+    status,
+)
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from shared.constants import SERVICE_NAME, SERVICE_VERSION
 
+from backend.audio import generate_voice_note
 from backend.database import (
     compute_deltas,
     compute_report_hash,
     find_report_by_hash,
     get_database_health,
+    get_translation,
     get_user_biomarkers,
     save_report,
     save_translation,
@@ -28,6 +38,7 @@ from backend.gemini_analyzer import (
     ReportSummary,
     analyze,
     apply_safety_overrides,
+    translate,
 )
 from backend.ocr_scrub import (
     ocr_rows,
@@ -67,6 +78,7 @@ else:
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins if allowed_origins != ["*"] else ["*"],
+    allow_origin_regex=r"^https:\/\/.*\.pages\.dev$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -237,30 +249,31 @@ async def analyze_report(
 
     # 4. SHA-256 Deduplication cache check
     report_hash = compute_report_hash(scrubbed_lines)
-    if user_id:
-        try:
-            cached_report = find_report_by_hash(user_id, report_hash)
-            if cached_report:
-                cached_id = str(cached_report["id"])
-                field_name = f"summary_{lang}" if lang in ("hi", "kn") else "summary_en"
-                cached_data = cached_report.get(field_name) or (
-                    cached_report.get("summary_en") if lang == "en" else None
-                )
+    effective_user = user_id or f"web_{report_hash[:16]}"
+    try:
+        cached_report = find_report_by_hash(effective_user, report_hash)
+        if cached_report:
+            cached_id = str(cached_report["id"])
+            field_name = (
+                f"summary_{lang}" if lang in ("hi", "kn") else "summary_en"
+            )
+            cached_data = cached_report.get(field_name) or (
+                cached_report.get("summary_en") if lang == "en" else None
+            )
 
-                if cached_data and isinstance(cached_data, dict):
-                    cached_data["report_id"] = cached_id
-                    return cached_data
-        except Exception as exc:
-            logger.warning("Cache lookup encountered error: %s", exc)
+            if cached_data and isinstance(cached_data, dict):
+                cached_data["report_id"] = cached_id
+                return cached_data
+    except Exception as exc:
+        logger.warning("Cache lookup encountered error: %s", exc)
 
     # 5. Longitudinal history & trend delta calculation
     deltas: list[str] = []
-    if user_id:
-        try:
-            history = get_user_biomarkers(user_id)
-            deltas = compute_deltas(parsed_rows, history)
-        except Exception as exc:
-            logger.warning("Failed to fetch historical trends: %s", exc)
+    try:
+        history = get_user_biomarkers(effective_user)
+        deltas = compute_deltas(parsed_rows, history)
+    except Exception as exc:
+        logger.warning("Failed to fetch historical trends: %s", exc)
 
     # 6. Structured AI analysis via Gemini 2.5 Flash
     try:
@@ -290,27 +303,137 @@ async def analyze_report(
 
     # 8. Persistence to Supabase
     report_dict = summary.model_dump()
-    if user_id:
-        try:
-            saved_id = save_report(
-                user_id=user_id,
-                report_hash=report_hash,
-                summary_en=report_dict,
-                urgency=summary.urgency,
-                biomarker_rows=parsed_rows,
-            )
-            report_dict["report_id"] = saved_id
+    try:
+        saved_id = save_report(
+            user_id=effective_user,
+            report_hash=report_hash,
+            summary_en=report_dict,
+            urgency=summary.urgency,
+            biomarker_rows=parsed_rows,
+        )
+        report_dict["report_id"] = saved_id
 
-            if lang != "en":
-                save_translation(
-                    report_id=saved_id,
-                    lang=lang,
-                    summary_json=report_dict,
-                )
-        except Exception as exc:
-            logger.error("Failed to save report to database: %s", exc)
+        if lang != "en":
+            save_translation(
+                report_id=saved_id,
+                lang=lang,
+                summary_json=report_dict,
+            )
+    except Exception as exc:
+        logger.error("Failed to save report to database: %s", exc)
 
     return report_dict
+
+
+class TranslateRequest(BaseModel):
+    report_id: str | None = None
+    summary_en: dict[str, Any] | None = None
+    lang: str
+
+
+@app.post("/api/translate", tags=["Translation"])
+async def translate_endpoint(req: TranslateRequest) -> dict[str, Any]:
+    """Translates a report summary into Hindi or Kannada with cache support."""
+    target_lang = req.lang.lower().strip()
+    if target_lang not in ("hi", "kn", "en"):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Unsupported language. Must be 'en', 'hi', or 'kn'.",
+        )
+
+    if req.report_id:
+        cached = get_translation(req.report_id, target_lang)
+        if cached:
+            return cached
+
+        # Cache miss: fetch English base
+        base_en = get_translation(req.report_id, "en")
+        if not base_en and req.summary_en:
+            base_en = req.summary_en
+
+        if not base_en:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Report record not found for translation.",
+            )
+
+        translated = translate(base_en, target_lang=target_lang)
+        translated_dict = translated.model_dump()
+        translated_dict["report_id"] = req.report_id
+        try:
+            save_translation(req.report_id, target_lang, translated_dict)
+        except Exception as exc:
+            logger.warning("Failed to cache translation in database: %s", exc)
+        return translated_dict
+
+    if req.summary_en:
+        translated = translate(req.summary_en, target_lang=target_lang)
+        return translated.model_dump()
+
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="Either report_id or summary_en must be provided.",
+    )
+
+
+class AudioRequest(BaseModel):
+    summary: dict[str, Any]
+    lang: str = "en"
+
+
+@app.post("/api/audio", tags=["Audio"])
+async def generate_audio_endpoint(req: AudioRequest) -> Response:
+    """Synthesizes in-memory voice note returning MP3 audio (zero disk writes)."""
+    target_lang = req.lang.lower().strip()
+    try:
+        audio_bytes = generate_voice_note(req.summary, lang=target_lang)
+        return Response(
+            content=audio_bytes,
+            media_type="audio/mpeg",
+            headers={
+                "Content-Disposition": f"inline; filename=summary_{target_lang}.mp3"
+            },
+        )
+    except Exception as exc:
+        logger.error("Audio generation failed: %s", exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to generate voice note audio.",
+        ) from exc
+
+
+@app.get("/api/audio", tags=["Audio"])
+async def get_audio_by_report(
+    report_id: str,
+    lang: str = "en",
+) -> Response:
+    """Fetches or generates audio voice note for a stored report."""
+    target_lang = lang.lower().strip()
+    summary_data = get_translation(report_id, target_lang)
+    if not summary_data:
+        summary_data = get_translation(report_id, "en")
+
+    if not summary_data:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Report not found for audio synthesis.",
+        )
+
+    try:
+        audio_bytes = generate_voice_note(summary_data, lang=target_lang)
+        return Response(
+            content=audio_bytes,
+            media_type="audio/mpeg",
+            headers={
+                "Content-Disposition": f"inline; filename=summary_{target_lang}.mp3"
+            },
+        )
+    except Exception as exc:
+        logger.error("Audio generation failed: %s", exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to generate voice note audio.",
+        ) from exc
 
 
 if __name__ == "__main__":

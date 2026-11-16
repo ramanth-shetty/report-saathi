@@ -236,8 +236,8 @@ flowchart TD
   * Integrate HTML5 Web Audio player with 0.8x/1.0x playback speed toggles.
   * Configure CORS for Cloudflare Pages domain in `backend/main.py`.
 * **Definition of Done (DoD):**
-  - [ ] Uploading a lab PDF on the web interface displays result card within 20s.
-  - [ ] Switching language toggles between English, Hindi, and Kannada.
+  - [x] Uploading a lab PDF on the web interface displays result card within 20s.
+  - [x] Switching language toggles between English, Hindi, and Kannada.
 
 ---
 

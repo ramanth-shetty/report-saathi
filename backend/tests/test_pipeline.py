@@ -236,3 +236,64 @@ def test_post_api_analyze_unsupported_format() -> None:
 
     assert response.status_code == 422
     assert "Unsupported file format" in response.json()["detail"]
+
+
+def test_post_api_translate_endpoint() -> None:
+    """Validate POST /api/translate invokes translation and caches."""
+    mock_summary = {
+        "urgency": "Routine",
+        "specialist": "General Physician",
+        "normal_summary": "All tests normal.",
+        "abnormal": [],
+        "cross_marker_patterns": [],
+        "doctor_questions": ["Q1", "Q2", "Q3"],
+    }
+
+    with (
+        patch("backend.main.get_translation", side_effect=[None, mock_summary]),
+        patch("backend.main.save_translation") as mock_save,
+        patch("backend.main.translate") as mock_trans,
+    ):
+        mock_trans.return_value = MagicMock(
+            model_dump=MagicMock(
+                return_value={
+                    **mock_summary,
+                    "normal_summary": "सभी जांचें सामान्य हैं।",
+                }
+            )
+        )
+        response = client.post(
+            "/api/translate",
+            json={
+                "report_id": "rep-test-1",
+                "summary_en": mock_summary,
+                "lang": "hi",
+            },
+        )
+
+    assert response.status_code == 200
+    assert "सभी जांचें सामान्य हैं।" in response.json()["normal_summary"]
+    mock_save.assert_called_once()
+
+
+def test_post_api_audio_endpoint() -> None:
+    """Validate POST /api/audio generates binary audio stream with audio/mpeg."""
+    mock_summary = {
+        "urgency": "Routine",
+        "specialist": "General Physician",
+        "normal_summary": "Normal.",
+        "abnormal": [],
+        "doctor_questions": ["Q1", "Q2", "Q3"],
+    }
+
+    with patch(
+        "backend.main.generate_voice_note", return_value=b"ID3_MOCK_AUDIO_BYTES"
+    ):
+        response = client.post(
+            "/api/audio",
+            json={"summary": mock_summary, "lang": "en"},
+        )
+
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "audio/mpeg"
+    assert response.content == b"ID3_MOCK_AUDIO_BYTES"

@@ -165,3 +165,18 @@ This document records architectural, technical, and operational decisions taken 
   - **Ergonomic Tap Targets:** Enforced minimum $56\text{dp}$ ($56\text{px}$) height for all actionable buttons and $48\text{dp}$ for language selection pills.
   - **4-State Architecture:** Implemented discrete Default, Empty, Loading (with progress checklist and privacy reassurance), and Error (with contextual recovery button) views in `frontend/src/main.ts`.
   - **Trilingual Localization & Fixed Disclaimer:** Integrated live language switching between English, Hindi (respectful "आप" register), and Kannada (respectful "ನೀವು" register), binding invariant legal disclaimers directly from `shared/constants.ts`.
+
+---
+
+## ADR 012: Full Web Client API Integration & In-Memory HTML5 Audio Playback
+
+* **Date:** 2026-11-16
+* **Status:** Accepted
+* **Context:**
+  The frontend client must connect asynchronously to the FastAPI backend (`POST /api/analyze`) for lab report analysis, support live vernacular language toggling between English, Hindi, and Kannada (`POST /api/translate`), and stream in-memory voice notes (`POST /api/audio`) directly into an HTML5 Web Audio player with 0.8x and 1.0x playback speed controls for older adults. Furthermore, Cloudflare Pages origin domains must be permitted via CORS.
+* **Decision:**
+  - **Asynchronous Web Client API Layer:** Implemented `frontend/src/api.ts` providing typed `analyzeReport`, `translateReport`, and `fetchAudioBlob` functions with robust HTTP error mapping (400 blurry rejections, 413 file size limits, 500 server retries).
+  - **CORS Cloudflare Pages Configuration:** Added origin regex `r"^https:\/\/.*\.pages\.dev$"` to `CORSMiddleware` in `backend/main.py`, enabling secure cross-origin requests from Cloudflare Pages preview and production deployments.
+  - **Vernacular Translation Endpoint (`POST /api/translate`):** Exposed on-demand structured translation endpoint reading from cache when available, caching newly translated Indic records in Supabase.
+  - **In-Memory Audio Streaming (`POST /api/audio` & `GET /api/audio`):** Exposed audio synthesis endpoints returning `audio/mpeg` byte streams generated in RAM via `gTTS`, maintaining DPDP zero disk persistence.
+  - **HTML5 Web Audio Player & Speed Toggles:** Integrated `Audio` API in `frontend/src/main.ts` with play/pause state handling and accessible 0.8x/1.0x playback speed toggles tailored for older adults.
