@@ -1,0 +1,35 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: reportsaathi-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - CORS_ORIGIN=http://localhost:80,http://localhost:5173,https://reportsaathi.pages.dev
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - SUPABASE_URL=${SUPABASE_URL:-}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY:-}
+      - WEBHOOK_SECRET=${WEBHOOK_SECRET:-}
+      - WEBHOOK_BASE_URL=${WEBHOOK_BASE_URL:-}
+    env_file:
+      - path: .env
+        required: false
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        - VITE_API_URL=http://localhost:8000
+    container_name: reportsaathi-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped

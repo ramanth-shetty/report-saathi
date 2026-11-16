@@ -1,0 +1,60 @@
+# ==============================================================================
+# ReportSaathi Backend Dockerfile.dockerignore (for root context builds)
+# ==============================================================================
+
+# Virtual environments
+venv/
+backend/venv/
+.venv/
+env/
+
+# Python bytecode and compiled caches
+**/__pycache__/
+**/*.py[cod]
+**/*.pyo
+**/*.pyd
+
+# Linter and test caches
+.pytest_cache/
+backend/.pytest_cache/
+.ruff_cache/
+backend/.ruff_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+.coverage.*
+
+# Secrets and local environment files
+.env
+.env.*
+*.env
+!*.example
+
+# Frontend service files and node dependencies
+frontend/
+node_modules/
+dist/
+
+# Git and CI/CD metadata
+.git/
+.gitignore
+.github/
+
+# IDE, OS, and editor metadata
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Documentation and design assets
+docs/
+.agents/
+*.md
+!README.md
+
+# Offline test fixtures & integration tests
+tests/
+backend/tests/
+supabase/

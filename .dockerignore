@@ -1,0 +1,65 @@
+# ==============================================================================
+# ReportSaathi Root .dockerignore
+# ==============================================================================
+
+# Virtual environments
+venv/
+backend/venv/
+.venv/
+env/
+
+# Python bytecode and compiled caches
+**/__pycache__/
+**/*.py[cod]
+**/*.pyo
+**/*.pyd
+
+# Linter and test caches
+.pytest_cache/
+backend/.pytest_cache/
+.ruff_cache/
+backend/.ruff_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+.coverage.*
+
+# Node dependencies and build artifacts
+**/node_modules/
+frontend/node_modules/
+frontend/dist/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Secrets and local environment files
+.env
+.env.*
+*.env
+!*.example
+
+# Git and CI/CD metadata
+.git/
+.gitignore
+.github/
+
+# IDE, OS, and editor metadata
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Documentation and design assets
+docs/
+.agents/
+*.md
+!README.md
+
+# Offline test fixtures & integration tests
+tests/
+backend/tests/
+supabase/
