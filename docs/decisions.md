@@ -118,3 +118,19 @@ This document records architectural, technical, and operational decisions taken 
   - **Quality Gate Rejection:** Rejects blurry scans yielding average OCR confidence $< 55.0$ with `400 Bad Request`.
   - **Cache-First Orchestration:** Immediately computes SHA-256 hash over scrubbed rows. Cache hits return previously validated summaries in $< 1.5$s with zero Gemini API calls.
   - **Safety & Disclaimer Guarantee:** All model outputs pass through `apply_safety_overrides()` and `sanitize_adversarial_output()`, appending invariant trilingual disclaimers from `shared/constants.py`.
+
+---
+
+## ADR 009: Telegram Bot Event Architecture, Consent Gate & Vernacular Delivery
+
+* **Date:** 2026-11-15
+* **Status:** Accepted
+* **Context:**
+  The primary user touchpoint for ReportSaathi is a Telegram Bot designed for family members uploading reports for older relatives. The bot must operate asynchronously with zero disk persistence to meet DPDP Act 2023 requirements, enforce explicit affirmative consent prior to any processing, provide immediate user reassurance, and present accessible vernacular summary cards with interactive callbacks.
+* **Decision:**
+  - **Asynchronous Architecture:** Implemented `backend/bot.py` using `python-telegram-bot` (v21+, async) with decoupled command, callback query, and media handlers.
+  - **DPDP Affirmative Consent Gate:** Implemented `/start` onboarding requiring the user to tap `[✅ I Agree & Continue]` before any report intake is allowed. Unconsented uploads are halted with an immediate prompt to review and accept privacy terms.
+  - **In-Memory Streaming & Zero Disk Footprint:** Media buffers from Telegram are ingested directly into memory bytearrays, converted/OCR'd, and immediately dereferenced and garbage collected (`del file_bytes`) without writing to disk.
+  - **Instant Feedback & In-Place Editing:** Upon intake, immediately posts `"Analyzing... ⏳\nPersonal details removed (best effort)."` and updates the exact same message in-place once analysis and safety overrides complete.
+  - **Interactive Action Keyboard:** Attaches inline callback buttons for vernacular translation (`[🇬🇧 English]`, `[🇮🇳 हिंदी]`, `[🇮🇳 ಕನ್ನಡ]`), longitudinal biomarker trends (`[📈 Past Trends]`), and DPDP statutory erasure (`[🗑️ Delete My Data]`).
+  - **Two-Step Data Erasure:** The `/delete` command and inline delete buttons invoke a safety confirmation step before calling `delete_user_data(chat_id)` to prevent accidental loss.

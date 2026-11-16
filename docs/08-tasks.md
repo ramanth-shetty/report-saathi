@@ -185,8 +185,8 @@ flowchart TD
   * Attach inline action keyboard: `[🇮🇳 हिंदी]`, `[🇮🇳 ಕನ್ನಡ]`, `[📈 Trends]`, `[🗑️ Delete My Data]`.
   * Implement `/delete` command with two-step confirmation.
 * **Definition of Done (DoD):**
-  - [ ] Direct photo upload in Telegram returns formatted card within 25s.
-  - [ ] `/delete` purges user data and confirms in chat.
+  - [x] Direct photo upload in Telegram returns formatted card within 25s.
+  - [x] `/delete` purges user data and confirms in chat.
 
 #### Task PR-08: Vernacular Localization & Audio Voice Notes
 * **Owner:** `AI` + `backend`
