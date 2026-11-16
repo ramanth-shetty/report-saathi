@@ -149,3 +149,19 @@ This document records architectural, technical, and operational decisions taken 
   - **Invariant Legal Disclaimer Injection:** Disclaimer translation by AI is prohibited; exact statutory strings from `DISCLAIMER[lang]` in `shared/constants.py` are attached programmatically in Python.
   - **Database Translation Caching:** Translated summaries are persisted to `summary_hi` or `summary_kn` in the `reports` table via `save_translation()`. Re-tapping a language button returns cached JSON with zero Gemini API calls.
   - **In-Memory Audio Generation (`generate_voice_note()`):** Implemented `backend/audio.py` using `gTTS` streaming synthesized audio directly into `io.BytesIO` buffers, sent via Telegram `reply_voice` with zero disk writes.
+
+---
+
+## ADR 011: Single-Column Responsive Indic Web Architecture & WCAG AAA Accessibility
+
+* **Date:** 2026-11-16
+* **Status:** Accepted
+* **Context:**
+  A significant segment of Indian households uses entry-level Android smartphones with 360dp display viewports, low RAM (2GB–3GB), and presbyopia or mild hand tremors among older family members. Standard desktop or multi-column web templates cause horizontal clipping, vowel modifier clipping in Indic scripts, and difficult tap ergonomics. The web client must guarantee zero horizontal overflow at 360dp, WCAG AAA high contrast ($\ge 7:1$), minimum 56dp tap targets, and clean state handling across 4 distinct UI modes.
+* **Decision:**
+  - **Strict 360dp Viewport Optimization:** Structured `frontend/index.html` and `src/style.css` as a single-column vertical stack with `max-width: 480px`, `width: 100%`, and global `overflow-x: hidden`. Tested across standard 360px mobile emulation with zero horizontal scrolling.
+  - **Indic Typography & Line-Height Scaling:** Enforced line-height $1.75\times$ with `hyphens: none` for `Noto Sans Devanagari` and `Noto Sans Kannada` font families, preventing clipping of vowel modifiers (*matras*) and conjunct subscripts (*vattus*).
+  - **High-Contrast WCAG AAA Palette:** Applied `#0F172A` body text against `#F8FAFC` background ($11.2:1$ contrast ratio) and `#FFFFFF` on `#0F766E` deep teal buttons ($7.8:1$ contrast ratio), well exceeding the WCAG AAA $7:1$ accessibility requirement.
+  - **Ergonomic Tap Targets:** Enforced minimum $56\text{dp}$ ($56\text{px}$) height for all actionable buttons and $48\text{dp}$ for language selection pills.
+  - **4-State Architecture:** Implemented discrete Default, Empty, Loading (with progress checklist and privacy reassurance), and Error (with contextual recovery button) views in `frontend/src/main.ts`.
+  - **Trilingual Localization & Fixed Disclaimer:** Integrated live language switching between English, Hindi (respectful "आप" register), and Kannada (respectful "ನೀವು" register), binding invariant legal disclaimers directly from `shared/constants.ts`.

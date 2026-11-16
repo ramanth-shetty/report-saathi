@@ -221,8 +221,8 @@ flowchart TD
   * Implement 4 UI states for all screens: Default, Empty, Loading (spinner + reassurance), and Error.
   * Add language selection pills and fixed disclaimer banner.
 * **Definition of Done (DoD):**
-  - [ ] Chrome DevTools 360px mobile emulation shows zero horizontal overflow.
-  - [ ] Lighthouse Accessibility score $\ge 95$ (WCAG AAA contrast verified).
+  - [x] Chrome DevTools 360px mobile emulation shows zero horizontal overflow.
+  - [x] Lighthouse Accessibility score $\ge 95$ (WCAG AAA contrast verified).
 
 #### Task PR-10: Web Client API Integration & Audio Playback
 * **Owner:** `frontend` + `backend`

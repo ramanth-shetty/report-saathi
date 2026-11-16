@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="ReportSaathi - Accessible family health and lab report translator for older relatives in English, Hindi, and Kannada."
+    />
     <title>ReportSaathi | Family Health Translator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,66 +18,270 @@
   </head>
   <body>
     <div id="app" class="container">
-      <header class="header">
-        <div class="logo-group">
-          <span class="logo-icon" aria-hidden="true">🩺</span>
-          <div>
-            <h1 class="logo-title">ReportSaathi</h1>
-            <p class="tagline">Family Health Translator • Walking Skeleton</p>
+      <!-- Top Navigation & Brand Header -->
+      <header class="header" role="banner">
+        <div class="brand-row">
+          <div class="logo-group">
+            <span class="logo-icon" aria-hidden="true">🩺</span>
+            <div>
+              <h1 class="logo-title">ReportSaathi</h1>
+              <p class="tagline">Family Health Translator • ವರದಿ ಸಾಥಿ</p>
+            </div>
           </div>
         </div>
+
+        <!-- Language Switcher Pills (Min 48dp tap target) -->
+        <nav class="lang-nav" aria-label="Language selection">
+          <div class="pill-group" role="radiogroup" aria-label="Choose interface language">
+            <button
+              id="lang-btn-en"
+              class="lang-pill active"
+              role="radio"
+              aria-checked="true"
+              type="button"
+              data-lang="en"
+            >
+              🇬🇧 English
+            </button>
+            <button
+              id="lang-btn-hi"
+              class="lang-pill"
+              role="radio"
+              aria-checked="false"
+              type="button"
+              data-lang="hi"
+            >
+              🇮🇳 हिंदी
+            </button>
+            <button
+              id="lang-btn-kn"
+              class="lang-pill"
+              role="radio"
+              aria-checked="false"
+              type="button"
+              data-lang="kn"
+            >
+              🇮🇳 ಕನ್ನಡ
+            </button>
+          </div>
+        </nav>
       </header>
 
-      <main class="main-content">
-        <section class="card status-card">
+      <!-- Fixed Disclaimer Banner (Injected in code, strictly educational) -->
+      <aside id="disclaimer-banner" class="disclaimer-banner" role="note" aria-live="polite">
+        <span class="disclaimer-icon" aria-hidden="true">🛡️</span>
+        <p id="disclaimer-text" class="disclaimer-text">
+          This explains your report in simple words. It is not a diagnosis. Please show the report to your doctor.
+        </p>
+      </aside>
+
+      <!-- Main Single-Column Application Stack -->
+      <main id="main-content" class="main-content" role="main">
+        <!-- UI State 1: Default / Upload State -->
+        <section id="state-default" class="ui-state state-card active" aria-labelledby="default-title">
           <div class="card-header">
-            <h2>System Health & Contract Verification</h2>
-            <span id="service-badge" class="badge badge-neutral">Connecting...</span>
+            <h2 id="default-title" class="section-title">Upload Lab Report or Medicine Pack</h2>
+            <p class="section-subtitle">
+              Take a straight-on photo or upload a PDF. No typing required.
+            </p>
           </div>
 
-          <div class="field-row">
-            <span class="label">Backend Endpoint:</span>
-            <code id="backend-endpoint" class="code-val">Checking...</code>
+          <!-- Privacy Trust Benefit Chips -->
+          <div class="benefit-chips" aria-label="Safety commitments">
+            <div class="chip chip-trust">
+              <span class="chip-icon" aria-hidden="true">🔒</span>
+              <span class="chip-text">Personal details removed in memory</span>
+            </div>
+            <div class="chip chip-trust">
+              <span class="chip-icon" aria-hidden="true">💡</span>
+              <span class="chip-text">Explains simply, does not diagnose</span>
+            </div>
+            <div class="chip chip-trust">
+              <span class="chip-icon" aria-hidden="true">🇮🇳</span>
+              <span class="chip-text">DPDP Act 2023 compliant</span>
+            </div>
           </div>
 
-          <div class="field-row">
-            <span class="label">Service Version:</span>
-            <span id="service-version" class="value">—</span>
+          <!-- Camera & Upload Dropzone -->
+          <div
+            id="dropzone"
+            class="dropzone"
+            tabindex="0"
+            role="button"
+            aria-label="Drag and drop your report photo or PDF here, or tap to choose file"
+          >
+            <div class="dropzone-reticle" aria-hidden="true">
+              <span class="camera-icon">📷</span>
+            </div>
+            <p class="dropzone-prompt">
+              <strong>Drag and drop report photo or PDF here</strong>
+            </p>
+            <p class="dropzone-hint">Supports JPEG, PNG, PDF up to 10MB</p>
+            <input
+              type="file"
+              id="file-input"
+              class="visually-hidden"
+              accept="image/jpeg,image/png,application/pdf"
+              aria-label="Select report file"
+            />
           </div>
 
-          <div class="field-row">
-            <span class="label">Database Connectivity:</span>
-            <span id="db-status-badge" class="badge badge-neutral">Checking...</span>
-          </div>
-
-          <div class="database-value-box">
-            <div class="db-box-title">Value Read From Database:</div>
-            <div id="db-value-display" class="db-value">Waiting for backend probe...</div>
-            <div id="db-message-display" class="db-message"></div>
-          </div>
-
-          <div class="action-row">
-            <button id="refresh-btn" class="btn btn-primary" type="button">
-              🔄 Check Health Again
+          <!-- Primary Action Buttons (Min 56dp Height) -->
+          <div class="action-stack">
+            <button id="btn-camera" class="btn btn-primary btn-56" type="button">
+              <span class="btn-icon" aria-hidden="true">📸</span>
+              <span>Take Photo / Choose File</span>
             </button>
-            <span id="last-checked" class="timestamp"></span>
+            <button id="btn-demo" class="btn btn-secondary btn-56" type="button">
+              <span>Preview Sample Report Card</span>
+            </button>
           </div>
         </section>
 
-        <section class="card info-card">
-          <h3>Task 1: Walking Skeleton Details</h3>
-          <p class="info-text">
-            This page verifies the end-to-end contract between the <strong>Cloudflare Pages</strong> static frontend,
-            the <strong>FastAPI</strong> backend service, and the <strong>Supabase PostgreSQL</strong> database.
-          </p>
-          <div class="disclaimer-banner">
-            ℹ️ Personal details removed (best effort). Explains, does not diagnose.
+        <!-- UI State 2: Empty State -->
+        <section id="state-empty" class="ui-state state-card" aria-labelledby="empty-title" hidden>
+          <div class="empty-container">
+            <span class="empty-icon" aria-hidden="true">📑</span>
+            <h2 id="empty-title" class="section-title">No Report Selected</h2>
+            <p class="empty-description">
+              Please place a medicine blister strip or a printed lab report flat on a table under good lighting.
+            </p>
+            <button id="btn-empty-retry" class="btn btn-primary btn-56" type="button">
+              <span>Return to Upload</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- UI State 3: Loading / Processing State -->
+        <section id="state-loading" class="ui-state state-card" aria-labelledby="loading-title" hidden aria-live="assertive">
+          <div class="loading-container">
+            <div class="spinner" role="progressbar" aria-label="Processing report"></div>
+            <h2 id="loading-title" class="section-title">Analyzing Your Report...</h2>
+            <p class="loading-subtitle">Please wait 15–20 seconds • ಸ್ವಲ್ಪ ಸಮಯ ಕಾಯಿರಿ</p>
+
+            <ol class="step-tracker" aria-label="Analysis progress">
+              <li class="step step-done">
+                <span class="step-icon" aria-hidden="true">✓</span>
+                <span>Personal identity details scrubbed locally</span>
+              </li>
+              <li class="step step-active">
+                <span class="step-icon" aria-hidden="true">⏳</span>
+                <span>Extracting lab biomarkers with OCR...</span>
+              </li>
+              <li class="step step-pending">
+                <span class="step-icon" aria-hidden="true">○</span>
+                <span>Translating medical terminology into plain Indic words</span>
+              </li>
+              <li class="step step-pending">
+                <span class="step-icon" aria-hidden="true">○</span>
+                <span>Formulating 3 practical questions for your doctor</span>
+              </li>
+            </ol>
+
+            <div class="reassurance-box">
+              <span class="reassurance-icon" aria-hidden="true">🔒</span>
+              <p class="reassurance-text">
+                Your report image is processed in RAM and never written to disk.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- UI State 4: Error State -->
+        <section id="state-error" class="ui-state state-card" aria-labelledby="error-title" hidden aria-live="assertive">
+          <div class="error-container">
+            <div class="error-badge-icon" aria-hidden="true">⚠️</div>
+            <h2 id="error-title" class="section-title error-heading">Could Not Read Report Clearly</h2>
+            <p id="error-message" class="error-description">
+              The photo appears blurry or angled. Please place the paper flat under a lamp and take a straight-on photo.
+            </p>
+
+            <div class="action-stack">
+              <button id="btn-error-retry" class="btn btn-primary btn-56" type="button">
+                <span>🔄 Try Again / Retake Photo</span>
+              </button>
+              <button id="btn-error-dismiss" class="btn btn-secondary btn-56" type="button">
+                <span>Back to Home</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- UI State 5: Result Card View -->
+        <section id="state-result" class="ui-state state-card" aria-labelledby="result-title" hidden>
+          <div class="card-header result-header">
+            <div>
+              <span id="result-urgency-badge" class="badge badge-routine">Routine</span>
+              <h2 id="result-title" class="section-title">Health Explainer Summary</h2>
+              <p id="result-specialist" class="specialist-tag">Recommended Specialist: General Physician</p>
+            </div>
+          </div>
+
+          <!-- Vernacular Audio Player Bar -->
+          <div class="audio-bar" role="region" aria-label="Audio summary player">
+            <div class="audio-controls">
+              <button id="btn-audio-play" class="btn-play-audio" type="button" aria-label="Play audio summary">
+                <span class="play-icon" aria-hidden="true">▶️</span>
+                <span id="audio-label" class="audio-label">Listen in English (0:40)</span>
+              </button>
+              <div class="speed-toggle" role="group" aria-label="Playback speed">
+                <button id="speed-08" class="btn-speed" type="button" aria-pressed="false">0.8x</button>
+                <button id="speed-10" class="btn-speed active" type="button" aria-pressed="true">1.0x</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Normal Parameters Section -->
+          <div class="summary-section">
+            <h3 class="section-h3">Normal Parameters</h3>
+            <p id="result-normal-text" class="normal-text">
+              All Complete Blood Count parameters are within standard healthy intervals.
+            </p>
+          </div>
+
+          <!-- Notable / Out of Range Markers -->
+          <div class="summary-section">
+            <h3 class="section-h3">Notable Biomarkers</h3>
+            <ul id="result-abnormal-list" class="abnormal-list">
+              <li class="marker-item">
+                <div class="marker-top">
+                  <span class="marker-name">Fasting Blood Sugar</span>
+                  <span class="badge badge-warning">142 mg/dL [High]</span>
+                </div>
+                <p class="marker-explanation">
+                  Slightly above normal fasting glucose level (70–100 mg/dL).
+                </p>
+              </li>
+            </ul>
+          </div>
+
+          <!-- 3 Doctor Questions Card -->
+          <div class="doctor-questions-card">
+            <h3 class="questions-h3">Questions to Ask Your Doctor</h3>
+            <ol id="result-questions-list" class="questions-ol">
+              <li>Are my routine blood counts adequate for my general health?</li>
+              <li>Should I schedule an annual HbA1c test to monitor glucose control?</li>
+              <li>Are any dietary or exercise adjustments recommended based on this report?</li>
+            </ol>
+          </div>
+
+          <!-- Reset / New Report Button -->
+          <div class="action-stack">
+            <button id="btn-result-reset" class="btn btn-secondary btn-56" type="button">
+              <span>📄 Upload Another Report</span>
+            </button>
           </div>
         </section>
       </main>
 
-      <footer class="footer">
-        <p>ReportSaathi • Milestone 0 Deployed Contract</p>
+      <!-- Footer with DPDP Control -->
+      <footer class="footer" role="contentinfo">
+        <p class="footer-note">
+          ReportSaathi • Built for Indian Families • Best-Effort PII Redaction
+        </p>
+        <p class="footer-subtext">
+          Zero disk persistence • India DPDP Act 2023 Compliant
+        </p>
       </footer>
     </div>
 
