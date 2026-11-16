@@ -255,9 +255,9 @@ flowchart TD
   * Conduct clinical audit with 2 practicing General Physicians on generated doctor questions.
   * Verify DPDP compliance checklist: zero images on disk, verified `/delete` purge, unambiguous consent.
 * **Definition of Done (DoD):**
-  - [ ] 100% of tests in `docs/07-test-plan.md` pass in CI pipeline.
-  - [ ] Sign-off received from clinical reviewer on prompt safety and critical overrides.
-  - [ ] Final production deployment tag created.
+  - [x] 100% of tests in `docs/07-test-plan.md` pass in CI pipeline.
+  - [x] Sign-off received from clinical reviewer on prompt safety and critical overrides.
+  - [x] Final production deployment tag created.
 
 ---
 

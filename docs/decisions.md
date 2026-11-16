@@ -180,3 +180,18 @@ This document records architectural, technical, and operational decisions taken 
   - **Vernacular Translation Endpoint (`POST /api/translate`):** Exposed on-demand structured translation endpoint reading from cache when available, caching newly translated Indic records in Supabase.
   - **In-Memory Audio Streaming (`POST /api/audio` & `GET /api/audio`):** Exposed audio synthesis endpoints returning `audio/mpeg` byte streams generated in RAM via `gTTS`, maintaining DPDP zero disk persistence.
   - **HTML5 Web Audio Player & Speed Toggles:** Integrated `Audio` API in `frontend/src/main.ts` with play/pause state handling and accessible 0.8x/1.0x playback speed toggles tailored for older adults.
+
+---
+
+## ADR 013: Security Hardening, Adversarial Defense, Rate Limit Backoff & Clinical Verification Audit
+
+* **Date:** 2026-11-16
+* **Status:** Accepted
+* **Context:**
+  Task PR-11 and Gateway GATE-6 require clinical verification and statutory security hardening before general release. The system must defend against adversarial prompt injection attacks (`TC-SEC-1`) that attempt to jailbreak the model into issuing fatal cancer diagnoses or altering prescription drug schedules. The database layer must guarantee complete resistance against SQL injection in untrusted OCR tokens (`TC-SEC-2`). The Gemini API integration must handle HTTP 429 quota exhaustion gracefully via exponential backoff (`TC-SEC-3`). Furthermore, statutory compliance under India's DPDP Act 2023 requires verification of zero image persistence and verifiable hard cascade user deletion (`/delete`).
+* **Decision:**
+  - **Adversarial Jailbreak Sanitization (`sanitize_adversarial_output`):** Enforced regex-based negative guardrails intercepting and redacting prohibited terminal diagnoses (e.g. stage 4 cancer, adenocarcinoma) and prohibited prescription modifications (e.g. discontinue prescription, double insulin dose). Invariant fixed legal disclaimers remain attached unconditionally.
+  - **SQL Injection Parameterization:** Verified all Supabase PostgreSQL database queries use typed dictionary parameters through PostgREST. Malicious SQL payloads injected through biomarker names are safely parameterized without executing raw SQL.
+  - **HTTP 429 Rate-Limit Exponential Backoff (`_generate_with_retry`):** Implemented automated retry with exponential backoff (2.0s initial backoff, doubling per attempt) upon encountering Gemini API 429 or `RESOURCE_EXHAUSTED` responses. If quota exhaustion persists, a graceful and user-friendly error message is returned rather than crashing.
+  - **Clinical Audit Verification:** Validated that generated doctor questions are strictly educational, non-diagnostic, non-prescriptive, and limited to exactly 3 focused questions.
+  - **DPDP Act 2023 Statutory Verification:** Verified that raw OCR images and audio streams are processed entirely in memory with 0 bytes written to disk, and verified that `/delete` executes cascading hard deletion of user accounts, reports, and biomarker history.

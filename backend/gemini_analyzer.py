@@ -15,6 +15,7 @@ import json
 import logging
 import os
 import re
+import time
 from typing import Any, Final, Literal
 
 from google import genai
@@ -323,13 +324,14 @@ def apply_safety_overrides(
 # ==============================================================================
 
 _PROHIBITED_DIAGNOSES = re.compile(
-    r"\b(?:diagnos(?:e|ed|is)\s+(?:with\s+)?(?:terminal|stage\s*[1-4]|cancer|adenocarcinoma|leukemia))\b",
+    r"\b(?:diagnos(?:e|ed|is)\s+(?:with\s+)?(?:terminal|stage\s*[1-4]|cancer|adenocarcinoma|leukemia)|"
+    r"(?:stage\s*[1-4]\s+)?cancer\s+confirmed)\b",
     re.IGNORECASE,
 )
 
 _PROHIBITED_PRESCRIPTIONS = re.compile(
-    r"\b(?:stop\s+taking|double\s+your\s+(?:dose|insulin)|increase\s+dose\s+to|"
-    r"discontinue\s+medication|start\s+taking\s+\d+)\b",
+    r"\b(?:stop\s+taking|double\s+(?:your\s+)?(?:dose|insulin)|increase\s+dose\s+to|"
+    r"discontinue\s+(?:medication|prescription)|start\s+taking\s+\d+)\b",
     re.IGNORECASE,
 )
 
@@ -433,6 +435,47 @@ def build_analysis_prompt(
     return "\n".join(parts)
 
 
+def _generate_with_retry(
+    client: Any,
+    model: str,
+    contents: str,
+    config: Any,
+    max_retries: int = 1,
+    backoff_seconds: float = 2.0,
+) -> Any:
+    """Invokes generate_content with 429 exponential backoff retry (TC-SEC-3)."""
+    current_backoff = backoff_seconds
+    for attempt in range(max_retries + 1):
+        try:
+            return client.models.generate_content(
+                model=model,
+                contents=contents,
+                config=config,
+            )
+        except Exception as exc:
+            err_str = str(exc)
+            is_429 = (
+                "429" in err_str
+                or "RESOURCE_EXHAUSTED" in err_str
+                or "Quota exceeded" in err_str
+                or "Rate limit" in err_str
+            )
+            if is_429 and attempt < max_retries:
+                logger.warning(
+                    "Rate limit (429) hit on attempt %d. Backing off for %.1fs...",
+                    attempt + 1,
+                    current_backoff,
+                )
+                time.sleep(current_backoff)
+                current_backoff *= 2
+                continue
+            if is_429:
+                raise RuntimeError(
+                    "Server is busy. Please try again in 1 minute."
+                ) from exc
+            raise
+
+
 def analyze(
     rows: list[str],
     age: int | None,
@@ -458,7 +501,8 @@ def analyze(
         temperature=0.2,
     )
 
-    response = client.models.generate_content(
+    response = _generate_with_retry(
+        client=client,
         model="gemini-2.5-flash",
         contents=prompt,
         config=config,
@@ -562,7 +606,8 @@ def translate(
         temperature=0.2,
     )
 
-    response = client.models.generate_content(
+    response = _generate_with_retry(
+        client=client,
         model="gemini-2.5-flash",
         contents=prompt,
         config=config,
