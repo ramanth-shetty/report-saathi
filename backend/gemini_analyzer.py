@@ -11,6 +11,7 @@ Enforces:
 
 from __future__ import annotations
 
+import json
 import logging
 import os
 import re
@@ -475,3 +476,114 @@ def analyze(
         summary.disclaimer = DISCLAIMER.get(selected_lang, DISCLAIMER["en"])
 
     return summary
+
+
+# ==============================================================================
+# 6. Vernacular Translation (Grandson-to-Grandmother Register)
+# ==============================================================================
+
+TRANSLATION_SYSTEM_INSTRUCTION: Final[str] = (
+    "You are ReportSaathi, an empathetic and calm family health translator for "
+    "Indian families.\n"
+    "Your purpose is to translate an English medical summary JSON into clear, "
+    "jargon-free Indic vernacular (Hindi or Kannada) so a grandchild can forward "
+    "it straight to their older relatives.\n\n"
+    "REGISTER & TONE GUIDELINES:\n"
+    "1. Respectful 'grandson-to-grandmother' (नात-पोता / ಮೊಮ್ಮಗ) register.\n"
+    "2. For Hindi: Always address the elder respectfully using 'आप' (Aap) forms.\n"
+    "3. For Kannada: Always address the elder respectfully using 'ನೀವು' (Neevu) "
+    "forms.\n\n"
+    "CRITICAL SAFETY BOUNDARIES (STRICTLY ENFORCED):\n"
+    "1. EXPLAIN, DO NOT DIAGNOSE: Frame findings gently and clearly. "
+    "Never assert illness.\n"
+    "2. NEVER ALTER MEDICATIONS: Never advise altering, stopping, or starting doses.\n"
+    "3. PRESERVE VALUES & UNITS: Keep numerical test values and standard units clear.\n"
+    "4. TRANSLATE MEDICAL SPECIALTY: Translate 'specialist' into the target language.\n"
+    "5. EXACTLY THREE QUESTIONS: Provide exactly 3 practical questions for the "
+    "doctor in the target language.\n"
+    "6. STRUCTURED OUTPUT: Return ONLY valid JSON matching the ReportSummary schema."
+)
+
+
+def build_translation_prompt(
+    summary_en: dict[str, Any] | ReportSummary,
+    target_lang: str,
+) -> str:
+    """Builds the translation prompt preserving clinical structure in Indic."""
+    lang_name = "Hindi (हिंदी)" if target_lang == "hi" else "Kannada (ಕನ್ನಡ)"
+    if isinstance(summary_en, ReportSummary):
+        summary_dict = summary_en.model_dump()
+    else:
+        summary_dict = dict(summary_en)
+
+    # Exclude disclaimer so model does not alter or re-synthesize it
+    payload = {k: v for k, v in summary_dict.items() if k != "disclaimer"}
+
+    return (
+        f"Translate the following structured medical lab report summary into "
+        f"{lang_name}.\n"
+        "Use a warm, respectful conversational tone suitable for an elder relative.\n\n"
+        f"INPUT ENGLISH SUMMARY JSON:\n"
+        f"{json.dumps(payload, ensure_ascii=False, indent=2)}\n\n"
+        f"INSTRUCTIONS:\n"
+        "1. Translate 'normal_summary', biomarker explanations, cross-marker "
+        f"patterns, 'specialist', and 'doctor_questions' into natural, respectful "
+        f"{lang_name}.\n"
+        "2. Keep the original 'urgency' level identical ('Routine', 'Consult Soon', "
+        "or 'Prompt Attention').\n"
+        "3. Return ONLY valid JSON matching the ReportSummary schema."
+    )
+
+
+def translate(
+    summary_en: dict[str, Any] | ReportSummary,
+    target_lang: str,
+    client: Any | None = None,
+) -> ReportSummary:
+    """Translates an English ReportSummary into Hindi or Kannada using Gemini."""
+    selected_lang = _normalize_lang(target_lang)
+    if selected_lang == "en":
+        if isinstance(summary_en, ReportSummary):
+            return summary_en
+        return ReportSummary.model_validate(summary_en)
+
+    prompt = build_translation_prompt(summary_en, selected_lang)
+
+    if client is None:
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            raise ValueError("GEMINI_API_KEY environment variable is not configured.")
+        client = genai.Client(api_key=api_key)
+
+    config = types.GenerateContentConfig(
+        system_instruction=TRANSLATION_SYSTEM_INSTRUCTION,
+        response_mime_type="application/json",
+        response_schema=ReportSummary,
+        temperature=0.2,
+    )
+
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt,
+        config=config,
+    )
+
+    raw_text = response.text or "{}"
+    translated = ReportSummary.model_validate_json(raw_text)
+
+    # Invariant: Urgency rank must never be downgraded during translation
+    orig_urgency = (
+        summary_en.urgency
+        if isinstance(summary_en, ReportSummary)
+        else summary_en.get("urgency", "Routine")
+    )
+    orig_rank = URGENCY_RANKS.get(orig_urgency, 1)
+    trans_rank = URGENCY_RANKS.get(translated.urgency, 1)
+    if trans_rank < orig_rank:
+        translated.urgency = orig_urgency
+
+    # Sanitize adversarial injections and inject invariant code-defined disclaimer
+    translated = sanitize_adversarial_output(translated)
+    translated.disclaimer = DISCLAIMER.get(selected_lang, DISCLAIMER["en"])
+
+    return translated

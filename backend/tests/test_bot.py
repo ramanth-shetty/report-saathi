@@ -260,6 +260,96 @@ def test_callback_past_trends() -> None:
         assert "Hemoglobin" in args[0]
 
 
+def test_callback_translate_kannada_and_cache(
+    sample_summary: ReportSummary,
+) -> None:
+    """TC-FR-5.1: Tapping Kannada translates, caches in DB, and sends voice note.
+
+    Second tap reads from cache with 0 Gemini calls.
+    """
+    from telegram import Message
+
+    mock_update = MagicMock()
+    mock_update.effective_chat.id = 987654321
+    mock_query = AsyncMock()
+    mock_query.data = "tr_kn_rep-123"
+    mock_query.message = MagicMock(spec=Message)
+    mock_query.message.reply_voice = AsyncMock()
+    mock_query.edit_message_text = AsyncMock()
+    mock_update.callback_query = mock_query
+    mock_context = MagicMock()
+
+    kannada_summary = ReportSummary(
+        normal_summary="ಎಲ್ಲಾ ಪರೀಕ್ಷೆಗಳು ಸಾಮಾನ್ಯ ಮಿತಿಯಲ್ಲಿದೆ.",
+        abnormal=[
+            AbnormalMarker(
+                test="ರಕ್ತದ ಸಕ್ಕರೆ",
+                value="142 mg/dL",
+                status="High",
+                explanation="ಸ್ವಲ್ಪ ಹೆಚ್ಚಾಗಿದೆ.",
+            )
+        ],
+        urgency="Routine",
+        specialist="ಸಾಮಾನ್ಯ ವೈದ್ಯರು",
+        doctor_questions=["ಪ್ರಶ್ನೆ ೧", "ಪ್ರಶ್ನೆ ೨", "ಪ್ರಶ್ನೆ ೩"],
+        disclaimer="ಇದು ನಿಮ್ಮ ವರದಿಯನ್ನು ಸರಳ ಪದಗಳಲ್ಲಿ ವಿವರಿಸುತ್ತದೆ.",
+    )
+
+    # 1. First tap: cache miss -> calls translate(), saves to DB, sends voice note
+    with (
+        patch("backend.bot.get_or_create_user") as mock_user,
+        patch("backend.bot.get_translation") as mock_get_trans,
+        patch("backend.bot.translate") as mock_translate,
+        patch("backend.bot.save_translation") as mock_save_trans,
+        patch(
+            "backend.bot.generate_voice_note", return_value=b"RIFF_FAKE_AUDIO"
+        ) as mock_audio,
+    ):
+        mock_user.return_value = {"id": "usr-1"}
+        # First call to get_translation for 'kn' returns None (cache miss).
+        # Second call for 'en' returns English summary to translate.
+        mock_get_trans.side_effect = [None, sample_summary.model_dump()]
+        mock_translate.return_value = kannada_summary
+
+        asyncio.run(callback_query_handler(mock_update, mock_context))
+
+        mock_translate.assert_called_once()
+        mock_save_trans.assert_called_once_with(
+            "rep-123", "kn", kannada_summary.model_dump()
+        )
+        mock_query.edit_message_text.assert_called_once()
+        card_text = mock_query.edit_message_text.call_args[0][0]
+        assert "ಎಲ್ಲಾ ಪರೀಕ್ಷೆಗಳು ಸಾಮಾನ್ಯ ಮಿತಿಯಲ್ಲಿದೆ." in card_text
+        mock_audio.assert_called_once_with(
+            kannada_summary.model_dump(), lang="kn"
+        )
+        mock_query.message.reply_voice.assert_called_once()
+
+    # 2. Second tap: cache hit -> reads directly from DB with 0 translate calls
+    mock_query.edit_message_text.reset_mock()
+    mock_query.message.reply_voice.reset_mock()
+
+    with (
+        patch("backend.bot.get_or_create_user") as mock_user,
+        patch("backend.bot.get_translation") as mock_get_trans,
+        patch("backend.bot.translate") as mock_translate,
+        patch(
+            "backend.bot.generate_voice_note", return_value=b"RIFF_FAKE_AUDIO"
+        ) as mock_audio,
+    ):
+        mock_user.return_value = {"id": "usr-1"}
+        mock_get_trans.return_value = kannada_summary.model_dump()
+
+        asyncio.run(callback_query_handler(mock_update, mock_context))
+
+        # ZERO Gemini translation calls!
+        mock_translate.assert_not_called()
+        mock_query.edit_message_text.assert_called_once()
+        card_text = mock_query.edit_message_text.call_args[0][0]
+        assert "ಎಲ್ಲಾ ಪರೀಕ್ಷೆಗಳು ಸಾಮಾನ್ಯ ಮಿತಿಯಲ್ಲಿದೆ." in card_text
+        mock_query.message.reply_voice.assert_called_once()
+
+
 # ==============================================================================
 # 4. Multimodal Document / Photo Intake
 # ==============================================================================

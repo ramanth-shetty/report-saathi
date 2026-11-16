@@ -134,3 +134,18 @@ This document records architectural, technical, and operational decisions taken 
   - **Instant Feedback & In-Place Editing:** Upon intake, immediately posts `"Analyzing... ⏳\nPersonal details removed (best effort)."` and updates the exact same message in-place once analysis and safety overrides complete.
   - **Interactive Action Keyboard:** Attaches inline callback buttons for vernacular translation (`[🇬🇧 English]`, `[🇮🇳 हिंदी]`, `[🇮🇳 ಕನ್ನಡ]`), longitudinal biomarker trends (`[📈 Past Trends]`), and DPDP statutory erasure (`[🗑️ Delete My Data]`).
   - **Two-Step Data Erasure:** The `/delete` command and inline delete buttons invoke a safety confirmation step before calling `delete_user_data(chat_id)` to prevent accidental loss.
+
+---
+
+## ADR 010: Indic Vernacular Localization Engine & In-Memory Audio Synthesis
+
+* **Date:** 2026-11-16
+* **Status:** Accepted
+* **Context:**
+  Older family relatives receiving health summaries frequently prefer spoken or written communication in Hindi or Kannada. The translation must adopt a respectful "grandson-to-grandmother" tone (respectful "आप" for Hindi, "ನೀವು" for Kannada) without introducing clinical hallucinations, diagnostic declarations, or dosage modifications. Furthermore, audio delivery must not persist generated sound files to disk (DPDP Act 2023 compliance), and translation requests must be cached in Supabase so subsequent language toggles execute with 0 Gemini API calls.
+* **Decision:**
+  - **Structured Indic Translation (`translate()`):** Implemented `translate(summary_en, target_lang)` in `backend/gemini_analyzer.py` utilizing Gemini 2.5 Flash constrained to the `ReportSummary` schema with empathetic grandson-to-grandmother system instructions.
+  - **Directional Urgency Invariant:** Enforced that clinical urgency level cannot be downgraded during translation (e.g., `Prompt Attention` in English remains `Prompt Attention` in Hindi/Kannada).
+  - **Invariant Legal Disclaimer Injection:** Disclaimer translation by AI is prohibited; exact statutory strings from `DISCLAIMER[lang]` in `shared/constants.py` are attached programmatically in Python.
+  - **Database Translation Caching:** Translated summaries are persisted to `summary_hi` or `summary_kn` in the `reports` table via `save_translation()`. Re-tapping a language button returns cached JSON with zero Gemini API calls.
+  - **In-Memory Audio Generation (`generate_voice_note()`):** Implemented `backend/audio.py` using `gTTS` streaming synthesized audio directly into `io.BytesIO` buffers, sent via Telegram `reply_voice` with zero disk writes.

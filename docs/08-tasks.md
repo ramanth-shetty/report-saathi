@@ -200,8 +200,8 @@ flowchart TD
   * Integrate audio generation (`gTTS` or verified pre-recorded audio snippets).
   * Send audio via Telegram `send_voice` on `lang:*` callback triggers.
 * **Definition of Done (DoD):**
-  - [ ] Tapping `[🇮🇳 ಕನ್ನಡ]` renders Kannada text card and voice note.
-  - [ ] Tapping `[🇮🇳 ಕನ್ನಡ]` a second time triggers 0 Gemini calls (verified in logs).
+  - [x] Tapping `[🇮🇳 ಕನ್ನಡ]` renders Kannada text card and voice note.
+  - [x] Tapping `[🇮🇳 ಕನ್ನಡ]` a second time triggers 0 Gemini calls (verified in logs).
 
 ---
 

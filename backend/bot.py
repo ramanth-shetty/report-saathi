@@ -11,6 +11,7 @@ Implements:
 
 from __future__ import annotations
 
+import io
 import logging
 import os
 from typing import Any
@@ -19,6 +20,7 @@ from shared.constants import DISCLAIMER
 from telegram import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
+    Message,
     Update,
 )
 from telegram.constants import ParseMode
@@ -31,6 +33,7 @@ from telegram.ext import (
     filters,
 )
 
+from backend.audio import generate_voice_note
 from backend.database import (
     compute_deltas,
     compute_report_hash,
@@ -48,6 +51,7 @@ from backend.gemini_analyzer import (
     ReportSummary,
     analyze,
     apply_safety_overrides,
+    translate,
 )
 from backend.ocr_scrub import (
     ocr_rows,
@@ -322,6 +326,13 @@ async def callback_query_handler(
             report_id = "_".join(parts[2:])
             try:
                 cached_trans = get_translation(report_id, target_lang)
+                if not cached_trans:
+                    base_en = get_translation(report_id, "en")
+                    if base_en:
+                        translated_model = translate(base_en, target_lang=target_lang)
+                        cached_trans = translated_model.model_dump()
+                        save_translation(report_id, target_lang, cached_trans)
+
                 if cached_trans:
                     new_text = format_summary_card(cached_trans, lang=target_lang)
                     user = get_or_create_user(chat_id=chat_id)
@@ -330,8 +341,29 @@ async def callback_query_handler(
                         parse_mode=ParseMode.MARKDOWN,
                         reply_markup=get_summary_keyboard(report_id, user["id"]),
                     )
+
+                    # Send vernacular audio voice note
+                    lang_labels = {"en": "English", "hi": "हिंदी", "kn": "ಕನ್ನಡ"}
+                    try:
+                        audio_bytes = generate_voice_note(
+                            cached_trans, lang=target_lang
+                        )
+                        voice_buf = io.BytesIO(audio_bytes)
+                        voice_buf.name = f"summary_{target_lang}.ogg"
+                        if isinstance(query.message, Message):
+                            await query.message.reply_voice(
+                                voice=voice_buf,
+                                caption=(
+                                    f"🎧 Voice Note "
+                                    f"({lang_labels.get(target_lang, target_lang)})"
+                                ),
+                            )
+                    except Exception as audio_err:
+                        logger.warning("Voice note generation failed: %s", audio_err)
                 else:
-                    await query.answer("Translation not yet cached.", show_alert=False)
+                    await query.answer(
+                        "Report details could not be found.", show_alert=False
+                    )
             except Exception as exc:
                 logger.error("Failed to switch translation: %s", exc)
         return
@@ -537,6 +569,20 @@ async def handle_document_or_photo(
             parse_mode=ParseMode.MARKDOWN,
             reply_markup=get_summary_keyboard(report_id, user_id),
         )
+
+        # 11. Send vernacular voice note if user preferred language is Indic
+        if user_lang in ("hi", "kn"):
+            try:
+                audio_bytes = generate_voice_note(summary, lang=user_lang)
+                voice_buf = io.BytesIO(audio_bytes)
+                voice_buf.name = f"summary_{user_lang}.ogg"
+                lang_labels = {"hi": "हिंदी", "kn": "ಕನ್ನಡ"}
+                await status_msg.reply_voice(
+                    voice=voice_buf,
+                    caption=f"🎧 Voice Note ({lang_labels.get(user_lang, user_lang)})",
+                )
+            except Exception as audio_err:
+                logger.warning("Voice note dispatch failed: %s", audio_err)
 
     except Exception as exc:
         logger.error("Pipeline failure in handle_document_or_photo: %s", exc)

@@ -24,3 +24,4 @@ opencv-python-headless>=4.9.0
 pillow>=10.2.0
 numpy>=1.26.0
 pymupdf>=1.23.0
+gTTS>=2.5.0
